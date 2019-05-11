@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import CampSelect from './CampSelect';
-import logo from './logo.svg';
 import './scss/App.scss';
 
 const App: React.FC = () => {

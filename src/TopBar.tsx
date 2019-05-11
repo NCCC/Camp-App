@@ -18,7 +18,7 @@ class TopBar extends React.Component {
   };
 
   toggleDrawer = () => () => {
-    this.setState(state => ({ open: !state.open }));
+    this.setState(state => ({ open: !this.state.open }));
   };
   
   handleListItemClick = (event, index) => {
