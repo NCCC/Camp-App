@@ -1,0 +1,16 @@
+div.App {
+  height: 100vh;
+  flex-wrap: unset;
+  flex-direction: column;
+}
+
+div.App div {
+  flex-basis: auto;
+}
+
+div.App-main {
+  flex-grow: 1;
+  flex-basis: auto;
+  overflow-y: auto;
+  padding: 15px;
+}
