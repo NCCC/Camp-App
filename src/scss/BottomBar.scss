@@ -1,8 +1,12 @@
-.BottomBar {
-  border-top: 1px solid gray;
-  background-color: #3f51b5;
+div.BottomBar {
+  height: 60px;
 }
-
-.BottomNavigation {
-  background-color: #3f51b5;
+button.NavSection {
+  transition: background-color 0.5s;
+}
+.NavSection-selected, .NavSection-selected svg {
+  color: white;
+}
+button.NavSection-selected {
+  background: #3F51B5;
 }

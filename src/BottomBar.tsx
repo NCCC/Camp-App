@@ -5,7 +5,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import MapIcon from '@material-ui/icons/Map';
 import PhoneIcon from '@material-ui/icons/Phone';
-
+import './scss/BottomBar.scss';
 
 export default class BottomBar extends React.Component {
   state = {
@@ -25,11 +25,36 @@ export default class BottomBar extends React.Component {
           value={value}
           onChange={this.handleChange}
           showLabels
+          className="BottomBar"
         >
-          <BottomNavigationAction label="Information" icon={<InfoIcon />} />
-          <BottomNavigationAction label="Schedule" icon={<ScheduleIcon />} />
-          <BottomNavigationAction label="Map" icon={<MapIcon />} />
-          <BottomNavigationAction label="Contact" icon={<PhoneIcon />} />
+          <BottomNavigationAction
+            label="Information"
+            icon={<InfoIcon />}
+            classes={{
+              root: 'NavSection',
+              selected:'NavSection-selected' }}
+          />
+          <BottomNavigationAction
+            label="Schedule"
+            icon={<ScheduleIcon />}
+            classes={{
+              root: 'NavSection',
+              selected:'NavSection-selected' }}
+          />
+          <BottomNavigationAction
+            label="Map"
+            icon={<MapIcon />}
+            classes={{
+              root: 'NavSection',
+              selected:'NavSection-selected' }}
+          />
+          <BottomNavigationAction
+            label="Contact"
+            icon={<PhoneIcon />}
+            classes={{
+              root: 'NavSection',
+              selected:'NavSection-selected' }}
+          />
         </BottomNavigation>
     );
   }
