@@ -4,7 +4,7 @@ div.BottomBar {
 button.NavSection {
   transition: background-color 0.5s;
 }
-.NavSection-selected, .NavSection-selected svg {
+.NavSection-selected, .NavSection-selected span {
   color: white;
 }
 button.NavSection-selected {

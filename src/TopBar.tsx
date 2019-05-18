@@ -10,20 +10,44 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import BusinessIcon from '@material-ui/icons/Business';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-class TopBar extends React.Component {
+interface TopBarProps {
+  campid: string;
+  handleCampSelect: (event, campid) => void;
+}
+
+class TopBar extends React.Component<TopBarProps, {}> {
   state = {
     open: false,
-    selectedIndex: 0
+    error: null,
+    campList: [],
+    isLoaded: false,
+    campid: ''
   };
 
   toggleDrawer = () => () => {
     this.setState(state => ({ open: !this.state.open }));
   };
   
-  handleListItemClick = (event, index) => {
-    this.setState({ selectedIndex: index });
-  };
+  componentWillReceiveProps(nextProps) {
+    this.setState({ campid: nextProps.campid });  
+  }
+
+  componentDidMount() {
+    fetch('https://api.nccc.se/camps/')
+    .then(result => result.json())
+    .then(
+      (data) => {
+        console.log('List of camps fetched from server.');
+        this.setState({isLoaded: true, campList: data.camps});
+      },
+      (error) => {
+        this.setState({isLoaded: true, error});
+        console.log(error);
+      }
+    );
+  }
   
   render() {
     return (
@@ -52,16 +76,25 @@ class TopBar extends React.Component {
               <ListItem>
                 <ListItemText>Select a camp:</ListItemText>
               </ListItem>
-              {['Prep Camp 2019', 'SC19 - Chinese Camp', 'SC19 - Junior/Youth/YA Camp',].map((text, index) => (
-                <ListItem button
-                  key={text}
-                  selected={this.state.selectedIndex === index}
-                  onClick={event => this.handleListItemClick(event, index)}
-                >
-                  <ListItemIcon><BusinessIcon /></ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              { this.state.isLoaded
+                ? this.state.campList.map((item) => {
+                  // Had to cast item to "any" for it to not crash with error TS2339
+                  let camp: any = item;
+                  return (
+                  <ListItem button
+                    key={camp.name}
+                    selected={this.props.campid === camp.id}
+                    onClick={event => this.props.handleCampSelect(event, camp.id)}
+                  >
+                    <ListItemIcon><BusinessIcon /></ListItemIcon>
+                    <ListItemText primary={camp.name} />
+                  </ListItem>
+                )})
+                : <ListItem>
+                    <ListItemIcon><CircularProgress /></ListItemIcon>
+                    <ListItemText>Fetching list of camps from the server...</ListItemText>
+                  </ListItem>
+              }
             </List>
           </div>
         </SwipeableDrawer>

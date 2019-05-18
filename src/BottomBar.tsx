@@ -1,26 +1,32 @@
 import React from 'react';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import InfoIcon from '@material-ui/icons/Info';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import MapIcon from '@material-ui/icons/Map';
-import PhoneIcon from '@material-ui/icons/Phone';
+import Icon from '@material-ui/core/Icon';
 import './scss/BottomBar.scss';
 
-export default class BottomBar extends React.Component {
+interface BottomBarProps {
+  campdata: any
+}
+
+export default class BottomBar extends React.Component<BottomBarProps, {}> {
   state = {
-    value : 0
+    value : 0,
+    campData : null
   };
+  
+  componentWillReceiveProps(nextProps) {
+    this.setState({ campData: nextProps.campdata });  
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
   
   render() {
-    //const { classes } = this.props;
-    const { value } = this.state;
+    const { value, campData } = this.state;
 
-    return (
+    if (!campData) {
+      return (
         <BottomNavigation
           value={value}
           onChange={this.handleChange}
@@ -28,34 +34,58 @@ export default class BottomBar extends React.Component {
           className="BottomBar"
         >
           <BottomNavigationAction
-            label="Information"
-            icon={<InfoIcon />}
-            classes={{
-              root: 'NavSection',
-              selected:'NavSection-selected' }}
-          />
-          <BottomNavigationAction
-            label="Schedule"
-            icon={<ScheduleIcon />}
-            classes={{
-              root: 'NavSection',
-              selected:'NavSection-selected' }}
-          />
-          <BottomNavigationAction
-            label="Map"
-            icon={<MapIcon />}
-            classes={{
-              root: 'NavSection',
-              selected:'NavSection-selected' }}
-          />
-          <BottomNavigationAction
-            label="Contact"
-            icon={<PhoneIcon />}
+            label="Start"
+            icon={<Icon>home</Icon>}
             classes={{
               root: 'NavSection',
               selected:'NavSection-selected' }}
           />
         </BottomNavigation>
-    );
+      );
+    } else {
+      let config: any[] = [];
+      let data: any = campData;
+      for (let sheet of data.sheets) {
+        if (sheet.properties.title === 'CONFIG') {
+          console.log('Configuration found',sheet);
+          let counter = 0;
+          for (let row of sheet.data[0].rowData) {
+            let current: string[] = [];
+            if (row.values) for (let value of row.values) {
+              if (value.formattedValue === "Section") {
+                break;
+              } else if (value.formattedValue !== "")  {
+                current.push( value.formattedValue );
+              }
+            }
+            if (current.length > 0)
+              config.push( current );
+            counter++;
+            if (counter === 5)
+              break;
+          }
+          console.log( 'Configuration', config );
+        }
+      }
+      return (
+        <BottomNavigation
+          value={value}
+          onChange={this.handleChange}
+          showLabels
+          className="BottomBar"
+        >
+        { config.map( (section) => (
+          <BottomNavigationAction
+            key={section[0]}
+            label={section[2]}
+            icon={<Icon>{section[1]}</Icon>}
+            classes={{
+              root: 'NavSection',
+              selected:'NavSection-selected' }}
+          />
+        ))}
+        </BottomNavigation>
+      );
+    }
   }
 }
