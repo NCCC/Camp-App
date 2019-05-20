@@ -11,8 +11,10 @@ class App extends React.Component {
     error: null,
     campSelectedID: '',
     sectionSelectedIndex: 0,
+    sectionSelectedName: '',
     isLoaded: false,
-    campData: null
+    campData: null,
+    campConfig: null
   };
   
   handleCampSelect = (event, campid) => {
@@ -23,7 +25,28 @@ class App extends React.Component {
     .then(
       (data) => {
         console.log('Camp info fetched for '+campid);
-        this.setState({isLoaded: true, campData: data});
+        let config: any[] = [];
+        for (let sheet of data.sheets) {
+          if (sheet.properties.title === 'CONFIG') {
+            var counter = 0;
+            for (let row of sheet.data[0].rowData) {
+              let current: string[] = [];
+              if (row.values) for (let value of row.values) {
+                if (value.formattedValue === "Section") {
+                  break;
+                } else if (value.formattedValue !== "")  {
+                  current.push( value.formattedValue );
+                }
+              }
+              if (current.length > 0)
+                config.push( current );
+              counter++;
+              if (counter === 5)
+                break;
+            }
+          }
+        }
+        this.setState({isLoaded: true, campData: data, campConfig: config});
         console.log('state', this.state.campData);
       },
       (error) => {
@@ -34,9 +57,24 @@ class App extends React.Component {
   };
   
   handleSectionSelect = (event, index) => {
-    this.setState({ sectionSelectedIndex: index });
-    console.log('Section selected: '+index);
+    this.setState({
+      sectionSelectedIndex: index
+      //sectionSelectedName: sectionName
+    });
+    console.log('Section selected: ('+index+')');
   };
+  
+  findSheet = ( sheetName ) => {
+    let data: any = this.state.campData;
+    if (data) {
+      for (let sheet of data.sheets) {
+        if (sheet.properties.title === sheetName) {
+          return sheet;
+        }
+      }
+    }
+    return null;
+  }
   
   render() {
     return (
@@ -52,15 +90,14 @@ class App extends React.Component {
         ? <CampSelect />
         : <CampInfo
             isLoaded={this.state.isLoaded}
-            sectionSelectedIndex={this.state.sectionSelectedIndex}
-            campdata={this.state.campData}
+            sectionData={this.state.campData}
           />
         }
         </div>
         <div className="App-footer">
           <BottomBar
             index={this.state.sectionSelectedIndex}
-            campdata={this.state.campData}
+            campConfig={this.state.campConfig}
             handleSectionSelect={this.handleSectionSelect.bind(this)}
           />
         </div>

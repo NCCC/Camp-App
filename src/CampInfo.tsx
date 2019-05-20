@@ -10,28 +10,25 @@ import Typography from '@material-ui/core/Typography';
 
 interface CampInfoProps {
   isLoaded: boolean,
-  campdata: any,
-  sectionSelectedIndex: number
+  sectionData: any
   //handleDataSelect: (event, index) => void;
 }
 
 export default class CampInfo extends React.Component<CampInfoProps, {}> {
   state = {
     isLoaded: 0,
-    sectionSelectedIndex: 0,
-    campData: null
+    sectionData: null
   };
   
   componentWillReceiveProps(nextProps) {
     this.setState({ 
       isLoaded: nextProps.isLoaded,
-      campData: nextProps.campdata,
-      sectionSelectedIndex: nextProps.sectionSelectedIndex
+      sectionData: nextProps.sectionData
     });  
   }
 
   render() {
-    const { isLoaded, sectionSelectedIndex, campData } = this.state;
+    const { isLoaded, sectionData } = this.state;
 
     if (!isLoaded) {
       return (
@@ -42,7 +39,7 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
           />
         </Card>
       )
-    } else if (!campData) {
+    } else if (!sectionData) {
       return (
         <Card>
           <CardHeader

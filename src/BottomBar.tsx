@@ -5,7 +5,7 @@ import Icon from '@material-ui/core/Icon';
 import './scss/BottomBar.scss';
 
 interface BottomBarProps {
-  campdata: any,
+  campConfig: any,
   index: number,
   handleSectionSelect: (event, index) => void;
 }
@@ -13,20 +13,20 @@ interface BottomBarProps {
 export default class BottomBar extends React.Component<BottomBarProps, {}> {
   state = {
     index: 0,
-    campData : null
+    campConfig: null
   };
   
   componentWillReceiveProps(nextProps) {
     this.setState({ 
       index: nextProps.index,
-      campData: nextProps.campdata
+      campConfig: nextProps.campConfig
     });  
   }
 
   render() {
-    const { index, campData } = this.state;
+    const { index, campConfig } = this.state;
 
-    if (!campData) {
+    if (!campConfig) {
       return (
         <BottomNavigation
           value={index}
@@ -43,28 +43,7 @@ export default class BottomBar extends React.Component<BottomBarProps, {}> {
         </BottomNavigation>
       );
     } else {
-      let config: any[] = [];
-      let data: any = campData;
-      for (let sheet of data.sheets) {
-        if (sheet.properties.title === 'CONFIG') {
-          let counter = 0;
-          for (let row of sheet.data[0].rowData) {
-            let current: string[] = [];
-            if (row.values) for (let value of row.values) {
-              if (value.formattedValue === "Section") {
-                break;
-              } else if (value.formattedValue !== "")  {
-                current.push( value.formattedValue );
-              }
-            }
-            if (current.length > 0)
-              config.push( current );
-            counter++;
-            if (counter === 5)
-              break;
-          }
-        }
-      }
+      let config: any = campConfig;
       return (
         <BottomNavigation
           value={index}
