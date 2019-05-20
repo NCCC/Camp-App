@@ -1,15 +1,16 @@
 import React from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
+import CampInfoCard from './CampInfoCard';
+import './scss/CampInfo.scss';
 
 interface CampInfoProps {
   isLoaded: boolean,
+  sectionConfig: any,
   sectionData: any
   //handleDataSelect: (event, index) => void;
 }
@@ -17,39 +18,91 @@ interface CampInfoProps {
 export default class CampInfo extends React.Component<CampInfoProps, {}> {
   state = {
     isLoaded: 0,
+    sectionConfig: null,
     sectionData: null
-  };
+  }
   
   componentWillReceiveProps(nextProps) {
     this.setState({ 
       isLoaded: nextProps.isLoaded,
+      sectionConfig: nextProps.sectionConfig,
       sectionData: nextProps.sectionData
-    });  
+    })
   }
 
   render() {
-    const { isLoaded, sectionData } = this.state;
+    const { isLoaded, sectionConfig, sectionData } = this.state
 
     if (!isLoaded) {
       return (
-        <Card>
-          <CardHeader
-            avatar={<CircularProgress />}
-            title="Loading data..."
-          />
-        </Card>
+        <CampSimpleCard
+          icon={<CircularProgress />}
+          title="Loading data..."
+        />
       )
-    } else if (!sectionData) {
+    } else if (!sectionData || !sectionConfig) {
       return (
-        <Card>
-          <CardHeader
-            avatar={<Icon>error</Icon>}
-            title="Error loading data."
-          />
-        </Card>
+        <CampSimpleCard
+          icon={<Icon>error</Icon>}
+          title="Error loading data."
+        />
       )
     } else {
-      return (<p>Yes data</p>)
+      let config: any = sectionConfig;
+      switch (config.Type) {
+        case 'Information':
+          return this.renderInformation()
+        default:
+          return (
+            <CampSimpleCard
+              icon={<Icon>error</Icon>}
+              title={"Section type unknown: "+config.Type}
+            />
+          )
+      }
     }
   }
+  
+  renderInformation = () => {
+    const { sectionConfig, sectionData } = this.state;
+    let config: any = sectionConfig;
+    let data: any = sectionData;
+    return (
+      <div>
+        <CampHeaderCard
+          variant="h2"
+          header={config.Name}
+        />
+        { data.map( (row, index) => (
+            <CampInfoCard
+              key={index}
+              information={row}
+            />
+        ))}
+      </div>
+    )
+  }
+}
+
+function CampSimpleCard( props ) {
+  return (
+    <Card classes={{ root: 'CampCard' }} >
+      <CardHeader
+        avatar={props.icon}
+        title={props.title}
+      />
+    </Card>
+  )
+}
+
+function CampHeaderCard( props ) {
+  return (
+    <Card classes={{ root: 'CampCard' }} >
+      <CardContent>
+        <Typography variant={props.variant}>
+          {props.header}
+        </Typography>
+      </CardContent>
+    </Card>
+  )
 }
