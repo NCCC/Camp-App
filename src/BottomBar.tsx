@@ -5,32 +5,32 @@ import Icon from '@material-ui/core/Icon';
 import './scss/BottomBar.scss';
 
 interface BottomBarProps {
-  campdata: any
+  campdata: any,
+  index: number,
+  handleSectionSelect: (event, index) => void;
 }
 
 export default class BottomBar extends React.Component<BottomBarProps, {}> {
   state = {
-    value : 0,
+    index: 0,
     campData : null
   };
   
   componentWillReceiveProps(nextProps) {
-    this.setState({ campData: nextProps.campdata });  
+    this.setState({ 
+      index: nextProps.index,
+      campData: nextProps.campdata
+    });  
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-  
   render() {
-    const { value, campData } = this.state;
+    const { index, campData } = this.state;
 
     if (!campData) {
       return (
         <BottomNavigation
-          value={value}
-          onChange={this.handleChange}
-          showLabels
+          value={index}
+          onChange={this.props.handleSectionSelect}
           className="BottomBar"
         >
           <BottomNavigationAction
@@ -47,7 +47,6 @@ export default class BottomBar extends React.Component<BottomBarProps, {}> {
       let data: any = campData;
       for (let sheet of data.sheets) {
         if (sheet.properties.title === 'CONFIG') {
-          console.log('Configuration found',sheet);
           let counter = 0;
           for (let row of sheet.data[0].rowData) {
             let current: string[] = [];
@@ -64,13 +63,12 @@ export default class BottomBar extends React.Component<BottomBarProps, {}> {
             if (counter === 5)
               break;
           }
-          console.log( 'Configuration', config );
         }
       }
       return (
         <BottomNavigation
-          value={value}
-          onChange={this.handleChange}
+          value={index}
+          onChange={this.props.handleSectionSelect}
           showLabels
           className="BottomBar"
         >
