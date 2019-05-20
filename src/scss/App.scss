@@ -7,6 +7,7 @@ div.App-header {
 div.App-main {
   padding: 75px 15px;
   min-height: 100vh;
+  box-sizing: border-box;
   overflow-y: auto;
   background: #E8EAF6;
 }
