@@ -28,26 +28,27 @@ class App extends React.Component {
         let config: any[] = [];
         for (let sheet of data.sheets) {
           if (sheet.properties.title === 'CONFIG') {
-            var counter = 0;
+            var rowCounter = 0;
+            var propertyNames: string[] = [];
             for (let row of sheet.data[0].rowData) {
-              let current: string[] = [];
-              if (row.values) for (let value of row.values) {
-                if (value.formattedValue === "Section") {
-                  break;
+              let current = {};
+              if (row.values) for (let index in row.values) {
+                let value = row.values[index];
+                if (rowCounter === 0) {
+                  propertyNames.push( value.formattedValue );
                 } else if (value.formattedValue !== "")  {
-                  current.push( value.formattedValue );
+                  current[propertyNames[index]] = value.formattedValue;
                 }
               }
-              if (current.length > 0)
+              if (current.hasOwnProperty('Icon') && current.hasOwnProperty('Name') && current.hasOwnProperty('Type'))
                 config.push( current );
-              counter++;
-              if (counter === 5)
+              rowCounter++;
+              if (rowCounter === 5)
                 break;
             }
           }
         }
         this.setState({isLoaded: true, campData: data, campConfig: config});
-        console.log('state', this.state.campData);
       },
       (error) => {
         this.setState({isLoaded: true, error});

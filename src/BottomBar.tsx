@@ -53,9 +53,9 @@ export default class BottomBar extends React.Component<BottomBarProps, {}> {
         >
         { config.map( (section) => (
           <BottomNavigationAction
-            key={section[0]}
-            label={section[2]}
-            icon={<Icon>{section[1]}</Icon>}
+            key={section.Section}
+            label={section.Name}
+            icon={<Icon>{section.Icon}</Icon>}
             classes={{
               root: 'NavSection',
               selected:'NavSection-selected' }}
