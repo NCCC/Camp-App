@@ -15,14 +15,16 @@ function CampSelect(props) {
   const { classes } = props;
 
   return (
-    <Paper className={classes.root}>
-      <Typography variant="h4" color="inherit">
-        Select a camp
-      </Typography>
-      <Typography variant="body1" color="inherit">
-        Select a camp from the menu.
-      </Typography>
-    </Paper>
+    <div className="App-main">
+      <Paper className={classes.root}>
+        <Typography variant="h4" color="inherit">
+          Select a camp
+        </Typography>
+        <Typography variant="body1" color="inherit">
+          Select a camp from the menu.
+        </Typography>
+      </Paper>
+    </div>
   );
 }
 

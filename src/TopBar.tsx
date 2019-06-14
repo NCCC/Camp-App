@@ -14,7 +14,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 interface TopBarProps {
   campid: string;
-  handleCampSelect: (event, campid) => void;
+  campname: string;
+  sectionname: string;
 }
 
 class TopBar extends React.Component<TopBarProps, {}> {
@@ -23,7 +24,9 @@ class TopBar extends React.Component<TopBarProps, {}> {
     error: null,
     campList: [],
     isLoaded: false,
-    campid: ''
+    campid: '',
+    campName: '',
+    sectionName: ''
   };
 
   toggleDrawer = () => () => {
@@ -31,7 +34,11 @@ class TopBar extends React.Component<TopBarProps, {}> {
   };
   
   componentWillReceiveProps(nextProps) {
-    this.setState({ campid: nextProps.campid });  
+    this.setState({
+      campid: nextProps.campid,
+      campName: nextProps.campname,
+      sectionName: nextProps.sectionname
+    });  
   }
 
   componentDidMount() {
@@ -50,6 +57,7 @@ class TopBar extends React.Component<TopBarProps, {}> {
   }
   
   render() {
+    const { campName, sectionName } = this.state
     return (
       <AppBar position="static">
         <Toolbar>
@@ -58,7 +66,10 @@ class TopBar extends React.Component<TopBarProps, {}> {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" noWrap>
-            NCCC Camp App
+            { campName ?
+              (campName+': '+sectionName) :
+              "NCCC Camp App"
+            }
           </Typography>
         </Toolbar>
         <SwipeableDrawer
@@ -84,7 +95,8 @@ class TopBar extends React.Component<TopBarProps, {}> {
                   <ListItem button
                     key={camp.name}
                     selected={this.props.campid === camp.id}
-                    onClick={event => this.props.handleCampSelect(event, camp.id)}
+                    component="a"
+                    href={camp.id}
                   >
                     <ListItemIcon><BusinessIcon /></ListItemIcon>
                     <ListItemText primary={camp.name} />
