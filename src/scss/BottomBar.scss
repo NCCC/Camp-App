@@ -1,12 +1,12 @@
 div.BottomBar {
   height: 60px;
 }
-button.NavSection {
+a.NavSection {
   transition: background-color 0.5s;
 }
 .NavSection-selected, .NavSection-selected span {
   color: white;
 }
-button.NavSection-selected {
+a.NavSection-selected {
   background: #3F51B5;
 }

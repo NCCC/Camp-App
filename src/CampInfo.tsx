@@ -28,6 +28,7 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
       sectionConfig: nextProps.sectionConfig,
       sectionData: nextProps.sectionData
     })
+    console.log('CampInfo state',this.state)
   }
 
   render() {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -44,9 +43,6 @@ class CampInfoCard extends React.Component<CampInfoCardProps, {}> {
           action={
             <IconButton
               onClick={this.handleExpandClick}
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded,
-              })}
               aria-expanded={this.state.expanded}
               aria-label="Show more"
             >

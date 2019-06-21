@@ -12,6 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import BusinessIcon from '@material-ui/icons/Business';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+
 interface TopBarProps {
   campid: string;
   campname: string;
@@ -67,7 +68,7 @@ class TopBar extends React.Component<TopBarProps, {}> {
           </IconButton>
           <Typography variant="h6" color="inherit" noWrap>
             { campName ?
-              (campName+': '+sectionName) :
+              (campName+' - '+sectionName) :
               "NCCC Camp App"
             }
           </Typography>

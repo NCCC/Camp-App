@@ -79,21 +79,6 @@ class App extends React.Component {
     );
   };
   
-  handleSectionSelect = (event, index) => {
-    const { campConfig } = this.state
-    if (campConfig) {
-      let sectionConfig: any = campConfig[index]
-      let sectionName: string = sectionConfig.Name
-      this.setState({
-        sectionSelectedIndex: index,
-        sectionName: sectionName
-      });
-      console.log('Section selected: '+index);
-    } else {
-      console.log('ERROR: Invalid section selected: '+index);
-    }
-  };
-  
   findSheet = ( sheetName ) => {
     let data: any = this.state.campData;
     if (data) {
@@ -107,18 +92,30 @@ class App extends React.Component {
   }
   
   CampInfoContainer = ({match}) => {
-    const { isLoaded, campData, sectionSelectedIndex, campConfig } = this.state
-    let sectionConfig: any = null
-    let sectionName: string = ''
-    let sectionData: any = null
+    const { isLoaded, campData, campConfig } = this.state;
+    console.log('Camp Info Container loading...');
+    let sectionSelected = match.params.section;
+    let sectionIndex = 0;
+    let config: any = campConfig;
+    let sectionConfig: any = null;
+    let sectionName: string = '';
+    let sectionData: any = null;
     if (campConfig && campData) {
-      sectionConfig = campConfig[sectionSelectedIndex]
-      sectionName = sectionConfig.Name
-      sectionData = campData[sectionName]
+      for (let index = 0; index < config.length; index++) {
+        if (config[index].Name === sectionSelected) {
+          sectionIndex = index;
+          break;
+        }
+      }
+      sectionConfig = campConfig[sectionIndex];
+      sectionName = sectionConfig.Name;
+      sectionData = campData[sectionName];
+      if (sectionName !== this.state.sectionName) {
+        this.setState({ sectionName: sectionName });
+      }
     }
     let campid = match.params.campid;
     if (!isLoaded) {
-      //this.setState({ isLoaded: false, campSelectedID: campid, campData: null });
       this.loadCampInfo( campid );
     }
 
@@ -126,15 +123,15 @@ class App extends React.Component {
       <div className="App-main">
         <CampInfo
           isLoaded={isLoaded}
-          sectionConfig={ sectionConfig }
-          sectionData={ sectionData }
+          sectionConfig={sectionConfig}
+          sectionData={sectionData}
         />
       </div>
       <div className="App-footer">
         <BottomBar
-          index={sectionSelectedIndex}
+          index={sectionIndex}
+          campid={campid}
           campConfig={campConfig}
-          handleSectionSelect={this.handleSectionSelect.bind(this)}
         />
       </div>
     </div>
@@ -154,7 +151,7 @@ class App extends React.Component {
             />
           </div>
           <Route exact path="/" component={CampSelect} />
-          <Route path="/:campid"
+          <Route path="/:campid/:section?"
             render={this.CampInfoContainer}
           />
         </div>
