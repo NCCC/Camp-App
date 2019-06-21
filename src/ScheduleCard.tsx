@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
@@ -18,29 +19,50 @@ const styles = theme => ({
   },
   expandOpen: {
     transform: 'rotate(180deg)',
+  },
+  activeDay: {
+    background: 'black'
   }
 });
 
 interface ScheduleCardProps {
   classes: any,
-  day: string,
-  events: []
+  day: any
 }
 
 class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
-  state = { expanded: false };
+  state = {
+    expanded: true
+  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !this.state.expanded }));
   };
   
+  constructor(props) {
+    super(props);
+    let now = new Date();
+    now.setHours(0); now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
+    if (props.day.date < now)
+      this.state.expanded = false;
+  }
+  
   render() {
-    const { classes, day, events } = this.props;
+    const { classes, day } = this.props;
+    let now = new Date();
+    now.setHours(0); now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
     
     return (
       <Card classes={{ root: 'CampCard' }} >
         <CardHeader
-          title={day}
+          title={day.title}
+          avatar={
+            <Avatar classes={{
+              root: (day.date >= now ? classes.activeDay : '')
+            }}>
+              {day.title.substr(0,2)}
+            </Avatar>
+          }
           action={
             <IconButton
               onClick={this.handleExpandClick}
@@ -53,7 +75,7 @@ class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
         />
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            {events.map( (data: any,index) => (
+            {day.events.map( (data: any,index) => (
               <Typography variant="body1" key={index}>
                 {data.StartTime} - {data.EndTime}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
               </Typography>

@@ -95,18 +95,22 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
       row.EndTime = getHourMinutes( end );
       let day = dayOfWeek( start );
       if (days[day]) {
-        days[day].push( row );
+        days[day].events.push( row );
       } else {
-        days[day] = [ row ];
+        start.setHours(0); start.setMinutes(0); start.setSeconds(0); start.setMilliseconds(0);
+        days[day] = {
+          date: start,
+          title: day,
+          events: [row]
+        };
       }
     } );
     return (
       <div>
-        { Object.keys(days).map( (key) => {
+        { Object.values(days).map( (day) => {
           return (
             <ScheduleCard
-              day={key}
-              events={days[key]}
+              day={day}
             />
           );
         })}
