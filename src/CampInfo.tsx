@@ -6,6 +6,7 @@ import Icon from '@material-ui/core/Icon';
 import SectionInformation from './SectionInformation';
 import SectionSchedule from './SectionSchedule';
 import SectionMap from './SectionMap';
+import SectionContact from './SectionContact';
 import './scss/CampInfo.scss';
 
 interface CampInfoProps {
@@ -28,7 +29,6 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
       sectionConfig: nextProps.sectionConfig,
       sectionData: nextProps.sectionData
     })
-    console.log('CampInfo state',this.state)
   }
 
   render() {
@@ -68,6 +68,12 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
           return (
             <SectionMap
               mapList={data}
+            />
+          )
+        case 'Contact':
+          return (
+            <SectionContact
+              contactList={data}
             />
           )
         default:
