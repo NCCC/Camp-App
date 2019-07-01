@@ -1,6 +1,8 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import SectionInformation from './SectionInformation';
@@ -45,7 +47,8 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
       return (
         <CampSimpleCard
           icon={<Icon>error</Icon>}
-          title="Error loading data."
+          title="Can't fetch camp information."
+          text="Are you connected to the internet? You must be connected to the internet the first time you select a camp to be able to download the information."
         />
       )
     } else {
@@ -95,6 +98,11 @@ function CampSimpleCard( props ) {
         avatar={props.icon}
         title={props.title}
       />
+      <CardContent>
+        <Typography variant="body1">
+          {props.text}
+        </Typography>
+      </CardContent>
     </Card>
   )
 }

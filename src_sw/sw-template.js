@@ -15,7 +15,7 @@ workbox.routing.registerNavigationRoute('/index.html', {
     });
 
 workbox.routing.registerRoute(
-      /\.(?:png|gif|jpg|jpeg)$/,
+      /\.(?:png|gif|jpg|jpeg|ico)$/,
       workbox.strategies.cacheFirst({
         cacheName: 'images',
         plugins: [
@@ -28,8 +28,29 @@ workbox.routing.registerRoute(
     );
 
 workbox.routing.registerRoute(
-  new RegExp('https://api.nccc.se/'),
-  workbox.strategies.cacheFirst()
+      /^https:\/\/fonts\.googleapis\.com\/icon|\.(?:woff|woff2)$/,
+      workbox.strategies.cacheFirst({
+        cacheName: 'fonts',
+        plugins: [
+          new workbox.expiration.Plugin({
+            maxEntries: 60,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          }),
+        ],
+      })
+    );
+
+workbox.routing.registerRoute(
+  /^https:\/\/api\.nccc\.se\//,
+  workbox.strategies.cacheFirst({
+        cacheName: 'api-cache',
+        plugins: [
+          new workbox.expiration.Plugin({
+            maxEntries: 60,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+          }),
+        ],
+      })
 );
 
 } else {

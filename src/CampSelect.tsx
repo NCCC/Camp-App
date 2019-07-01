@@ -1,31 +1,30 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-
-const styles = theme => ({
-  root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-  },
-});
+import Icon from '@material-ui/core/Icon';
 
 function CampSelect(props) {
-  const { classes } = props;
-
   return (
     <div className="App-main">
-      <Paper className={classes.root}>
-        <Typography variant="h4" color="inherit">
-          Select a camp
-        </Typography>
-        <Typography variant="body1" color="inherit">
-          Select a camp from the menu.
-        </Typography>
-      </Paper>
+      <Card>
+        <CardHeader
+          avatar={<Icon>folder_open</Icon>}
+          title={
+            <Typography variant="h5" color="inherit">
+              Select a camp
+            </Typography>
+          }
+        />
+        <CardContent>
+          <Typography variant="body1" color="inherit">
+            Select a camp from the menu.
+          </Typography>
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-export default withStyles(styles)(CampSelect);
+export default CampSelect;
