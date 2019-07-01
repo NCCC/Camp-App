@@ -97,7 +97,7 @@ class TopBar extends React.Component<TopBarProps, {}> {
                     key={camp.name}
                     selected={this.props.campid === camp.id}
                     component="a"
-                    href={camp.id}
+                    href={'/'+camp.id}
                   >
                     <ListItemIcon><BusinessIcon /></ListItemIcon>
                     <ListItemText primary={camp.name} />
