@@ -1,0 +1,15 @@
+.map_image {
+  max-width: 100%;
+  border-bottom: 1px solid gray;
+}
+button.map_close_button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+div.map_image_container {
+  overflow: scroll;
+  max-width: 100%;
+}
+.map_image_container img {
+}
