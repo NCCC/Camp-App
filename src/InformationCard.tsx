@@ -22,7 +22,6 @@ const styles = theme => ({
 });
 
 interface InformationCardProps {
-  classes: any,
   information: any
 }
 
@@ -34,7 +33,7 @@ class InformationCard extends React.Component<InformationCardProps, {}> {
   };
   
   render() {
-    const { classes, information } = this.props;
+    const { information } = this.props;
     
     return (
       <Card classes={{ root: 'CampCard' }} >

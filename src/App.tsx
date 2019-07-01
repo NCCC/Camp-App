@@ -9,11 +9,9 @@ import './scss/App.scss';
 class App extends React.Component {
   state = {
     error: null,
-    campSelectedID: '',
     sectionSelectedIndex: 0,
     isLoaded: false,
     campName: '',
-    sectionName: '',
     campData: {},
     campConfig: null
   };
@@ -61,7 +59,6 @@ class App extends React.Component {
           }
           this.setState({
             isLoaded: true,
-            campSelectedID: campid,
             campName: data.properties.name,
             campData: campData,
             campConfig: config
@@ -92,7 +89,7 @@ class App extends React.Component {
   }
   
   render() {
-    const { campSelectedID, campName, sectionName } = this.state
+    const { campName } = this.state
     
     return (
       <Router>
@@ -101,9 +98,9 @@ class App extends React.Component {
             <div className="App">
               <div className="App-header">
                 <TopBar
-                  campid={campSelectedID}
+                  campid=""
                   campname={campName}
-                  sectionname={sectionName}
+                  sectionname=""
                 />
               </div>
               <CampSelect />
@@ -112,12 +109,13 @@ class App extends React.Component {
         />
         <Route path="/:campid/:section?"
           render={routeProps => {
-            console.log('Camp Info Container loading...');
             const { isLoaded, campData, campConfig } = this.state;
             let sectionSelected = routeProps.match.params.section;
+            let campid = routeProps.match.params.campid;
             let sectionIndex = 0;
             let config: any = campConfig;
             let sectionConfig: any = null;
+            let sectionName: string = "";
             let sectionData: any = null;
             if (campConfig && campData) {
               for (let index = 0; index < config.length; index++) {
@@ -127,10 +125,9 @@ class App extends React.Component {
                 }
               }
               sectionConfig = campConfig[sectionIndex];
-              this.state.sectionName = sectionConfig.Name;
-              sectionData = campData[this.state.sectionName];
+              sectionName = sectionConfig.Name;
+              sectionData = campData[sectionName];
             }
-            let campid = routeProps.match.params.campid;
             if (!isLoaded) {
               this.loadCampInfo( campid );
             }
@@ -138,9 +135,9 @@ class App extends React.Component {
             <div className="App">
               <div className="App-header">
                 <TopBar
-                  campid={campSelectedID}
+                  campid={campid}
                   campname={campName}
-                  sectionname={this.state.sectionName}
+                  sectionname={sectionName}
                 />
               </div>
               <div className="App-main">

@@ -2,7 +2,7 @@ import React from 'react';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Icon from '@material-ui/core/Icon';
-import { Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './scss/BottomBar.scss';
 
 interface BottomBarProps {

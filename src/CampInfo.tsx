@@ -1,10 +1,8 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
 import SectionInformation from './SectionInformation';
 import SectionSchedule from './SectionSchedule';
 import SectionMap from './SectionMap';
@@ -91,18 +89,6 @@ function CampSimpleCard( props ) {
         avatar={props.icon}
         title={props.title}
       />
-    </Card>
-  )
-}
-
-function CampHeaderCard( props ) {
-  return (
-    <Card classes={{ root: 'CampCard' }} >
-      <CardContent>
-        <Typography variant={props.variant}>
-          {props.header}
-        </Typography>
-      </CardContent>
     </Card>
   )
 }
