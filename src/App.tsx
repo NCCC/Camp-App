@@ -36,8 +36,13 @@ class App extends React.Component {
                 let value = row.values[index];
                 if (rowCounter === 0) {
                   propertyNames.push( value.formattedValue );
-                } else if (value.formattedValue !== "")  {
-                  current[propertyNames[index]] = value.formattedValue;
+                } else if (value.formattedValue) {
+                  let val = value.formattedValue;
+                  current[propertyNames[index]] = val;
+                  // Preload all images so they're available in offline mode:
+                  if (val.endsWith(".jpg") || val.endsWith(".jpeg") || val.endsWith(".png") || val.endsWith(".gif")) {
+                    new Image().src = val;
+                  }
                 }
               }
               if (rowCounter > 0 &&
