@@ -29,10 +29,11 @@ class SectionSchedule extends React.Component<SectionScheduleProps, {}> {
     } );
     return (
       <div>
-        { Object.values(days).map( (day) => {
+        { Object.keys(days).map( (key) => {
           return (
             <ScheduleCard
-              day={day}
+              key={key}
+              day={days[key]}
             />
           );
         })}
