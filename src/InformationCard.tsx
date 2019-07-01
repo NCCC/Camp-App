@@ -21,12 +21,12 @@ const styles = theme => ({
   }
 });
 
-interface CampInfoCardProps {
+interface InformationCardProps {
   classes: any,
   information: any
 }
 
-class CampInfoCard extends React.Component<CampInfoCardProps, {}> {
+class InformationCard extends React.Component<InformationCardProps, {}> {
   state = { expanded: false };
 
   handleExpandClick = () => {
@@ -64,4 +64,4 @@ class CampInfoCard extends React.Component<CampInfoCardProps, {}> {
   }
 }
 
-export default withStyles(styles)(CampInfoCard);
+export default withStyles(styles)(InformationCard);
