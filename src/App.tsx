@@ -91,70 +91,76 @@ class App extends React.Component {
     return null;
   }
   
-  CampInfoContainer = ({match}) => {
-    const { isLoaded, campData, campConfig } = this.state;
-    console.log('Camp Info Container loading...');
-    let sectionSelected = match.params.section;
-    let sectionIndex = 0;
-    let config: any = campConfig;
-    let sectionConfig: any = null;
-    let sectionName: string = '';
-    let sectionData: any = null;
-    if (campConfig && campData) {
-      for (let index = 0; index < config.length; index++) {
-        if (config[index].Name === sectionSelected) {
-          sectionIndex = index;
-          break;
-        }
-      }
-      sectionConfig = campConfig[sectionIndex];
-      sectionName = sectionConfig.Name;
-      sectionData = campData[sectionName];
-      if (sectionName !== this.state.sectionName) {
-        this.setState({ sectionName: sectionName });
-      }
-    }
-    let campid = match.params.campid;
-    if (!isLoaded) {
-      this.loadCampInfo( campid );
-    }
-
-    return <div>
-      <div className="App-main">
-        <CampInfo
-          isLoaded={isLoaded}
-          sectionConfig={sectionConfig}
-          sectionData={sectionData}
-        />
-      </div>
-      <div className="App-footer">
-        <BottomBar
-          index={sectionIndex}
-          campid={campid}
-          campConfig={campConfig}
-        />
-      </div>
-    </div>
-  }
-  
   render() {
     const { campSelectedID, campName, sectionName } = this.state
     
     return (
       <Router>
-        <div className="App">
-          <div className="App-header">
-            <TopBar
-              campid={campSelectedID}
-              campname={campName}
-              sectionname={sectionName}
-            />
-          </div>
-          <Route exact path="/" component={CampSelect} />
-          <Route path="/:campid/:section?"
-            render={this.CampInfoContainer}
-          />
-        </div>
+        <Route exact path="/"
+          render={routeProps => (
+            <div className="App">
+              <div className="App-header">
+                <TopBar
+                  campid={campSelectedID}
+                  campname={campName}
+                  sectionname={sectionName}
+                />
+              </div>
+              <CampSelect />
+            </div>
+          )}
+        />
+        <Route path="/:campid/:section?"
+          render={routeProps => {
+            console.log('Camp Info Container loading...');
+            const { isLoaded, campData, campConfig } = this.state;
+            let sectionSelected = routeProps.match.params.section;
+            let sectionIndex = 0;
+            let config: any = campConfig;
+            let sectionConfig: any = null;
+            let sectionData: any = null;
+            if (campConfig && campData) {
+              for (let index = 0; index < config.length; index++) {
+                if (config[index].Name === sectionSelected) {
+                  sectionIndex = index;
+                  break;
+                }
+              }
+              sectionConfig = campConfig[sectionIndex];
+              this.state.sectionName = sectionConfig.Name;
+              sectionData = campData[this.state.sectionName];
+            }
+            let campid = routeProps.match.params.campid;
+            if (!isLoaded) {
+              this.loadCampInfo( campid );
+            }
+            return (
+            <div className="App">
+              <div className="App-header">
+                <TopBar
+                  campid={campSelectedID}
+                  campname={campName}
+                  sectionname={this.state.sectionName}
+                />
+              </div>
+              <div className="App-main">
+                <CampInfo
+                  isLoaded={isLoaded}
+                  sectionConfig={sectionConfig}
+                  sectionData={sectionData}
+                />
+              </div>
+              <div className="App-footer">
+                <BottomBar
+                  index={sectionIndex}
+                  campid={campid}
+                  campConfig={campConfig}
+                />
+              </div>
+            </div>
+            )
+          }}
+        />
       </Router>
     );
   }
