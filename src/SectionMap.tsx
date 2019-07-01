@@ -33,7 +33,6 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
 
   render() {
     const { mapList } = this.props;
-    console.log('Map list',mapList);
     let mapURL: string = '';
     let list: any[] = mapList.slice(); // Make a copy
     if (list[0].Name === 'Map Image') {
@@ -54,7 +53,7 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
         </CardActionArea>
         <List>
         { list.map( (row, index) => (
-          <ListItem>
+          <ListItem key={index}>
             <ListItemAvatar>
               <Avatar>
                 <Icon>{row.Icon}</Icon>
