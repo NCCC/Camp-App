@@ -15,19 +15,6 @@ workbox.routing.registerNavigationRoute('/index.html', {
     });
 
 workbox.routing.registerRoute(
-      /\.translation.json$/,
-      workbox.strategies.cacheFirst({
-        cacheName: 'translations',
-        plugins: [
-          new workbox.expiration.Plugin({
-            maxEntries: 60,
-            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
-          }),
-        ],
-      })
-    );
-
-workbox.routing.registerRoute(
       /\.(?:png|gif|jpg|jpeg|ico)$/,
       workbox.strategies.cacheFirst({
         cacheName: 'images',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,6 +19,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import i18n from './i18n';
 
+import './scss/TopBar.scss';
 
 // define the function outside of component scope
 const changeLanguage = (lng) => {
@@ -87,6 +89,7 @@ class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
           </Typography>
         </Toolbar>
         <SwipeableDrawer
+          classes={{paper: 'main_menu'}}
           open={this.state.open}
           onClose={this.toggleDrawer()}
           onOpen={this.toggleDrawer()}
@@ -105,6 +108,10 @@ class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
                 >中文</Button>
               </ListItemSecondaryAction>
             </ListItem>
+          </List>
+          <List
+            onClick={this.toggleDrawer()}
+          >
             <ListSubheader>
               {t('campselect.title')}:
             </ListSubheader>
@@ -116,8 +123,8 @@ class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
                 <ListItem button
                   key={camp.name}
                   selected={this.props.campid === camp.id}
-                  component="a"
-                  href={'/'+camp.id}
+                  component={Link}
+                  to={'/'+camp.id}
                 >
                   <ListItemIcon><BusinessIcon /></ListItemIcon>
                   <ListItemText primary={camp.name} />

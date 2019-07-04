@@ -11,7 +11,7 @@ class App extends React.Component {
   state = {
     error: null,
     sectionSelectedIndex: 0,
-    isLoaded: false,
+    campLoadedId: 0,
     campName: '',
     campData: {},
     campConfig: null
@@ -64,20 +64,20 @@ class App extends React.Component {
             }
           }
           this.setState({
-            isLoaded: true,
+            campLoadedId: campid,
             campName: data.properties.name,
             campData: campData,
             campConfig: config
           });
         } else {
-          let error = 'Error fetching camp data.';
-          this.setState({isLoaded: true, error});
+          let error = 'Error when fetching camp data: Invalid data received.';
+          this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
           console.log(error);
         }
       },
       (error) => {
-        this.setState({isLoaded: true, error});
-        console.log(error);
+        this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
+        console.log("fetch threw an error.", error);
       }
     );
   };
@@ -96,6 +96,8 @@ class App extends React.Component {
   
   render() {
     const { campName } = this.state
+    
+    console.log('Rerendering App.');
     
     return (
       <Router>
@@ -116,7 +118,7 @@ class App extends React.Component {
           />
           <Route path="/:campid/:section?"
             render={routeProps => {
-              const { isLoaded, campData, campConfig } = this.state;
+              const { campLoadedId, campData, campConfig } = this.state;
               let sectionSelected = routeProps.match.params.section;
               let campid = routeProps.match.params.campid;
               let sectionIndex = 0;
@@ -124,7 +126,10 @@ class App extends React.Component {
               let sectionConfig: any = null;
               let sectionName: string = "";
               let sectionData: any = null;
-              if (campConfig && campData) {
+              if (campid !== campLoadedId) {
+                this.loadCampInfo( campid );
+              }
+              else if (campConfig && campData) {
                 for (let index = 0; index < config.length; index++) {
                   if (config[index].Name === sectionSelected) {
                     sectionIndex = index;
@@ -134,9 +139,6 @@ class App extends React.Component {
                 sectionConfig = campConfig[sectionIndex];
                 sectionName = sectionConfig.Name;
                 sectionData = campData[sectionName];
-              }
-              if (!isLoaded) {
-                this.loadCampInfo( campid );
               }
               return (
               <div className="App">
@@ -149,7 +151,7 @@ class App extends React.Component {
                 </div>
                 <div className="App-main">
                   <CampInfo
-                    isLoaded={isLoaded}
+                    isLoaded={campLoadedId===campid}
                     sectionConfig={sectionConfig}
                     sectionData={sectionData}
                   />
