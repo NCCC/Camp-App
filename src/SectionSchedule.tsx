@@ -8,7 +8,7 @@ interface SectionScheduleProps {
 
 class SectionSchedule extends React.Component<SectionScheduleProps & WithTranslation, {}> {
   render() {
-    const { t, scheduleList } = this.props;
+    const { scheduleList } = this.props;
     let data: any = scheduleList;
     let days = {};
     data.forEach( (row) => {
@@ -28,7 +28,6 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
           avatar: avatar,
           events: [row]
         };
-        console.log('day',days[day]);
       }
     } );
     return (

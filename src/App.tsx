@@ -23,7 +23,7 @@ class App extends React.Component {
     .then(result => result.json())
     .then(
       (data) => {
-        console.log('Camp info fetched for '+campid);
+        console.log('Data fetched complete for: '+campid);
         let campData = {};
         let config: any[] = [];
         if (data.sheets) {
@@ -70,14 +70,14 @@ class App extends React.Component {
             campConfig: config
           });
         } else {
-          let error = 'Error when fetching camp data: Invalid data received.';
+          let error = 'Error when fetching camp data - Invalid data received.';
           this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
           console.log(error);
         }
       },
       (error) => {
         this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
-        console.log("fetch threw an error.", error);
+        console.log("Fetching camp info failed:", error);
       }
     );
   };
@@ -172,6 +172,5 @@ class App extends React.Component {
     );
   }
 }
-
 
 export default App;

@@ -60,7 +60,7 @@ class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
         this.setState({isLoaded: true, campList: data.camps});
       },
       (error) => {
-        console.log(error);
+        console.log('Fetching list of camps failed:',error);
         this.setState({isLoaded: true, error});
       }
     );
