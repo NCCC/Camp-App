@@ -77,7 +77,7 @@ class ScheduleCard extends React.Component<ScheduleCardProps & WithTranslation, 
         <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
           <CardContent>
             {day.events.map( (data: any,index) => (
-              <Typography variant="body1" key={index}>
+              <Typography variant="body1" key={index} style={{backgroundColor: data.Color}}>
                 {data.StartTime} - {data.EndTime}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
               </Typography>
             ))}

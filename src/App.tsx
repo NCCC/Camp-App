@@ -54,7 +54,7 @@ class App extends React.Component {
               )
                 parsedData.push( current );
               rowCounter++;
-              if (rowCounter === 5)
+              if (sheet.properties.title === 'CONFIG' && rowCounter === 5)
                 break;
             }
             if (sheet.properties.title === 'CONFIG') {

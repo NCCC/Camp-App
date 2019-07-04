@@ -11,14 +11,17 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
     const { scheduleList } = this.props;
     let data: any = scheduleList;
     let days = {};
-    data.forEach( (row) => {
-      let start = this.parseNordicDate( row.Start );
-      let end = this.parseNordicDate( row.End );
-      row.StartTime = this.getHourMinutes( start );
-      row.EndTime = this.getHourMinutes( end );
+    for (let index = 0; index < data.length; index++) {
+      let row_data = data[index];
+      if (!row_data.Start || !row_data.End)
+        continue;
+      let start = this.parseNordicDate( row_data.Start );
+      let end = this.parseNordicDate( row_data.End );
+      row_data.StartTime = this.getHourMinutes( start );
+      row_data.EndTime = this.getHourMinutes( end );
       let day = this.dayAndDate( start );
       if (days[day]) {
-        days[day].events.push( row );
+        days[day].events.push( row_data );
       } else {
         start.setHours(0); start.setMinutes(0); start.setSeconds(0); start.setMilliseconds(0);
         let avatar = this.getAvatar( start );
@@ -26,10 +29,10 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
           date: start,
           title: day,
           avatar: avatar,
-          events: [row]
+          events: [row_data]
         };
       }
-    } );
+    }
     return (
       <div>
         { Object.keys(days).map( (key) => {
@@ -79,7 +82,7 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
   }
 
   getHourMinutes( date ) {
-    return date.getHours()+':'+(date.getMinutes() < 10 ? '0' : '')+date.getMinutes();
+    return (date.getHours() < 10 ? '0' : '')+date.getHours()+':'+(date.getMinutes() < 10 ? '0' : '')+date.getMinutes();
   }
 }
 

@@ -39,25 +39,29 @@ class InformationCard extends React.Component<InformationCardProps, {}> {
       <Card classes={{ root: 'CampCard' }} >
         <CardHeader
           title={information.Title}
-          action={
-            <IconButton
+          action={ information.Text
+            ? (<IconButton
               onClick={this.handleExpandClick}
               aria-expanded={this.state.expanded}
               aria-label="Show more"
             >
               <Icon>expand_more</Icon>
-            </IconButton>
+            </IconButton>)
+            : ""
           }
         />
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            {information.Text.split('\n').map((line,index) => (
-              <Typography variant="body1" key={index}>
-                {line}
-              </Typography>
-            ))}
-          </CardContent>
-        </Collapse>
+        { information.Text
+          ? (<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              {information.Text.split('\n').map((line,index) => (
+                <Typography variant="body1" key={index}>
+                  {line}
+                </Typography>
+              ))}
+            </CardContent>
+          </Collapse>)
+          : ""
+        }
       </Card>
     )
   }
