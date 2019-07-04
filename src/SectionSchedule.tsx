@@ -2,12 +2,39 @@ import React from 'react';
 import ScheduleCard from './ScheduleCard';
 import { withTranslation, WithTranslation } from 'react-i18next';
 
+const SCHEDULE_UPDATE_TIME = 15*1000;
+
 interface SectionScheduleProps {
   scheduleList: any;
 }
 
 class SectionSchedule extends React.Component<SectionScheduleProps & WithTranslation, {}> {
+  state = {
+    now: new Date(),
+    nowTimer: null
+  }
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      now: new Date(),
+      nowTimer: null
+    }
+  }
+  
+  componentDidMount() {
+    let timer = setInterval(this.nowInterval.bind(this), SCHEDULE_UPDATE_TIME);
+    // store intervalId in the state so it can be accessed later:
+    this.setState({nowTimer: timer});
+  }
+  
+  nowInterval() {
+    let now = new Date();
+    this.setState({now: now});
+  }
+  
   render() {
+    const { now } = this.state;
     const { scheduleList } = this.props;
     let data: any = scheduleList;
     let days = {};
@@ -16,7 +43,9 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
       if (!row_data.Start || !row_data.End)
         continue;
       let start = this.parseNordicDate( row_data.Start );
+      row_data.StartDateObject = start;
       let end = this.parseNordicDate( row_data.End );
+      row_data.EndDateObject = end;
       row_data.StartTime = this.getHourMinutes( start );
       row_data.EndTime = this.getHourMinutes( end );
       let day = this.dayAndDate( start );
@@ -39,6 +68,7 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
           return (
             <ScheduleCard
               key={key}
+              now={now}
               day={days[key]}
             />
           );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -28,7 +29,8 @@ const styles = theme => ({
 
 interface ScheduleCardProps {
   classes: any,
-  day: any
+  day: any,
+  now: any
 }
 
 class ScheduleCard extends React.Component<ScheduleCardProps & WithTranslation, {}> {
@@ -42,16 +44,17 @@ class ScheduleCard extends React.Component<ScheduleCardProps & WithTranslation, 
   
   constructor(props) {
     super(props);
-    let now = new Date();
-    now.setHours(0); now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
-    if (props.day.date < now)
+    let today = new Date( props.now.getTime() );
+    today.setHours(0); today.setMinutes(0); today.setSeconds(0); today.setMilliseconds(0);
+    if (props.day.date < today)
       this.state.expanded = false;
   }
   
   render() {
-    const { t, classes, day } = this.props;
-    let now = new Date();
-    now.setHours(0); now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
+    const { t, classes, day, now } = this.props;
+    const { expanded } = this.state;
+    let today = new Date();
+    today.setHours(0); today.setMinutes(0); today.setSeconds(0); today.setMilliseconds(0);
     
     return (
       <Card classes={{ root: 'CampCard' }} >
@@ -59,28 +62,44 @@ class ScheduleCard extends React.Component<ScheduleCardProps & WithTranslation, 
           title={day.title}
           avatar={
             <Avatar classes={{
-              root: (day.date >= now ? classes.activeDay : '')
+              root: (day.date >= today ? classes.activeDay : '')
             }}>
               {day.avatar}
             </Avatar>
           }
           action={
             <IconButton
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded,
+              })}
               onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
+              aria-expanded={expanded}
               aria-label={t('schedule.show')}
             >
               <Icon>expand_more</Icon>
             </IconButton>
           }
         />
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            {day.events.map( (data: any,index) => (
-              <Typography variant="body1" key={index} style={{backgroundColor: data.Color}}>
-                {data.StartTime} - {data.EndTime}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
-              </Typography>
-            ))}
+            {day.events.map( (data: any,index) => {
+              let eventStyle = {
+                'padding': '2px 5px'
+              }
+              if (data.Color)
+                eventStyle['backgroundColor'] = data.Color
+              if (data.EndDateObject < now)
+                eventStyle['color'] = 'gray'
+              if (data.StartDateObject < now && now < data.EndDateObject) {
+                eventStyle['border'] = '2px solid black'
+                eventStyle['padding'] = '0 3px'
+              }
+              return (
+                <Typography variant="body1" key={index} style={eventStyle}>
+                  {data.StartTime} - {data.EndTime}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
+                </Typography>
+              )
+            })}
           </CardContent>
         </Collapse>
       </Card>
