@@ -5,9 +5,12 @@ const buildSW = () => {
   return workboxBuild.injectManifest({
     swSrc: 'src_sw/sw-template.js', // this is your sw template file
     swDest: 'build/sw.js', // this will be created in the build step
+    
+    // Any files generated in the 'build' directory matching the filetypes below
+    // will be cached offline when users load the page the first time:
     globDirectory: 'build',
     globPatterns: [
-      '**\/*.{js,css,html,png,jpg,json}',
+      '**\/*.{js,css,html,png,jpg,ico,json,woff,woff2}',
     ]
   }).then(({count, size, warnings}) => {
     // Optionally, log any warnings and details.
