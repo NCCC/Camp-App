@@ -12,13 +12,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import './scss/SectionMap.scss';
 
 interface SectionMapProps {
   mapList: any;
 }
 
-class SectionMap extends React.Component<SectionMapProps, {}> {
+class SectionMap extends React.Component<SectionMapProps & WithTranslation, {}> {
   state = {
     open: false
   };
@@ -32,10 +33,10 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
   };
 
   render() {
-    const { mapList } = this.props;
+    const { t, mapList } = this.props;
     let mapURL: string = '';
     let list: any[] = mapList.slice(); // Make a copy
-    if (list[0].Name === 'Map Image') {
+    if (list[0].Name === 'Map Image' || list[0].Location.startsWith('http')) {
       mapURL = list[0].Location;
       list.shift();
     }
@@ -47,8 +48,8 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
           <img
             src={mapURL}
             className="map_image"
-            title="Camp map"
-            alt="Camp map"
+            title={t('map.title')}
+            alt={t('map.title')}
           />
         </CardActionArea>
         <List>
@@ -71,7 +72,7 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
           onClose={this.handleClose}
           >
           <DialogTitle id="simple-dialog-title">
-            <Typography variant="h4">Map</Typography>
+            <Typography variant="h4">{t('map.title')}</Typography>
             <IconButton aria-label="Close" className="map_close_button" onClick={this.handleClose}>
               <Icon>close</Icon>
             </IconButton>
@@ -79,8 +80,8 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
           <Box className="map_image_container">
             <img
               src={mapURL}
-              title="Camp map"
-              alt="Camp map"
+              title={t('map.title')}
+              alt={t('map.title')}
             />
           </Box>
         </Dialog>
@@ -89,4 +90,4 @@ class SectionMap extends React.Component<SectionMapProps, {}> {
   }
 }
 
-export default SectionMap;
+export default withTranslation()(SectionMap);

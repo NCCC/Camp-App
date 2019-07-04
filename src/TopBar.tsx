@@ -84,7 +84,7 @@ class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
           <Typography variant="h6" color="inherit" noWrap>
             { campName ?
               (campName+' - '+sectionName) :
-              "NCCC Camp App"
+              t('campapp')
             }
           </Typography>
         </Toolbar>

@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 const styles = theme => ({
   expand: {
@@ -30,7 +31,7 @@ interface ScheduleCardProps {
   day: any
 }
 
-class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
+class ScheduleCard extends React.Component<ScheduleCardProps & WithTranslation, {}> {
   state = {
     expanded: true
   };
@@ -48,7 +49,7 @@ class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
   }
   
   render() {
-    const { classes, day } = this.props;
+    const { t, classes, day } = this.props;
     let now = new Date();
     now.setHours(0); now.setMinutes(0); now.setSeconds(0); now.setMilliseconds(0);
     
@@ -60,14 +61,14 @@ class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
             <Avatar classes={{
               root: (day.date >= now ? classes.activeDay : '')
             }}>
-              {day.title.substr(0,2)}
+              {day.avatar}
             </Avatar>
           }
           action={
             <IconButton
               onClick={this.handleExpandClick}
               aria-expanded={this.state.expanded}
-              aria-label="Show more"
+              aria-label={t('schedule.show')}
             >
               <Icon>expand_more</Icon>
             </IconButton>
@@ -87,4 +88,4 @@ class ScheduleCard extends React.Component<ScheduleCardProps, {}> {
   }
 }
 
-export default withStyles(styles)(ScheduleCard);
+export default withStyles(styles)(withTranslation()(ScheduleCard));

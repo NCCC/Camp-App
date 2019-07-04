@@ -1,8 +1,39 @@
 {
+  "campapp": "NCCC Camp App",
   "language": "Language",
+  "loading": "Loading",
   "campselect": {
     "title": "Select a camp",
     "text": "Select a camp from the menu.",
     "loading": "Fetching list of camps from the server"
+  },
+  "campinfo": {
+    "error_title": "Unable to fetch camp information",
+    "error_message": "Are you connected to the internet? You must be connected to the internet the first time you select a camp to be able to download the information. Try refreshing this page when you have an internet connection.",
+    "unknown_section": "Section type unknown"
+  },
+  "schedule": {
+    "show": "Show schedule",
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "avatar_sunday": "Su",
+    "avatar_monday": "Mo",
+    "avatar_tuesday": "Tu",
+    "avatar_wednesday": "We",
+    "avatar_thursday": "Th",
+    "avatar_friday": "Fr",
+    "avatar_saturday": "Sa"
+  },
+  "map": {
+    "title": "Camp Map"
+  },
+  "contact": {
+    "call_title": "Make a phone call?",
+    "call_text": "This will make a phone call to {{data.Phone}}. Are you sure you want to do this?"
   }
 }

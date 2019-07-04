@@ -1,8 +1,39 @@
 {
+  "campapp": "北歐華人基督教會營地應用",
   "language": "語言",
+  "loading": "載入中",
   "campselect": {
     "title": "選擇一個營地",
     "text": "從菜單中選擇一個營地",
     "loading": "從服務器中獲取營地列表"
+  },
+  "campinfo": {
+    "error_title": "無法獲取營地信息",
+    "error_message": "你連接到互聯網了嗎？ 您第一次選擇營地時必須連接到互聯網才能下載信息。 在連接互聯網時嘗試刷新此頁面。",
+    "unknown_section": "截麵類型未知"
+  },
+  "schedule": {
+    "show": "顯示時間表",
+    "sunday": "星期日",
+    "monday": "星期一",
+    "tuesday": "星期二",
+    "wednesday": "星期三",
+    "thursday": "星期四",
+    "friday": "星期五",
+    "saturday": "星期六",
+    "avatar_sunday": "日",
+    "avatar_monday": "一",
+    "avatar_tuesday": "二",
+    "avatar_wednesday": "三",
+    "avatar_thursday": "四",
+    "avatar_friday": "五",
+    "avatar_saturday": "六"
+  },
+  "map": {
+    "title": "營地圖"
+  },
+  "contact": {
+    "call_title": "打個電話？",
+    "call_text": "這將撥打{{data.Phone}}的電話。 你確定你要這麼做嗎？"
   }
 }

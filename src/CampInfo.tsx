@@ -9,6 +9,7 @@ import SectionInformation from './SectionInformation';
 import SectionSchedule from './SectionSchedule';
 import SectionMap from './SectionMap';
 import SectionContact from './SectionContact';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import './scss/CampInfo.scss';
 
 interface CampInfoProps {
@@ -18,7 +19,7 @@ interface CampInfoProps {
   //handleDataSelect: (event, index) => void;
 }
 
-export default class CampInfo extends React.Component<CampInfoProps, {}> {
+class CampInfo extends React.Component<CampInfoProps & WithTranslation, {}> {
   state = {
     isLoaded: 0,
     sectionConfig: null,
@@ -34,21 +35,22 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
   }
 
   render() {
-    const { isLoaded, sectionConfig, sectionData } = this.state
+    const { isLoaded, sectionConfig, sectionData } = this.state;
+    const { t } = this.props;
 
     if (!isLoaded) {
       return (
         <CampSimpleCard
           icon={<CircularProgress />}
-          title="Loading data..."
+          title={t('loading')}
         />
       )
     } else if (!sectionData || !sectionConfig) {
       return (
         <CampSimpleCard
           icon={<Icon>error</Icon>}
-          title="Can't fetch camp information."
-          text="Are you connected to the internet? You must be connected to the internet the first time you select a camp to be able to download the information."
+          title={t('campinfo.error_title')}
+          text={t('campinfo.error_message')}
         />
       )
     } else {
@@ -83,7 +85,7 @@ export default class CampInfo extends React.Component<CampInfoProps, {}> {
           return (
             <CampSimpleCard
               icon={<Icon>error</Icon>}
-              title={"Section type unknown: "+config.Type}
+              title={t('campinfo.unknown_section')+': '+config.Type}
             />
           );
       }
@@ -106,3 +108,5 @@ function CampSimpleCard( props ) {
     </Card>
   )
 }
+
+export default withTranslation()(CampInfo)
