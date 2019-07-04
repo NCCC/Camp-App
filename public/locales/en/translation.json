@@ -1,0 +1,8 @@
+{
+  "language": "Language",
+  "campselect": {
+    "title": "Select a camp",
+    "text": "Select a camp from the menu.",
+    "loading": "Fetching list of camps from the server"
+  }
+}

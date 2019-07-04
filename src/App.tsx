@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import CampSelect from './CampSelect';
 import CampInfo from './CampInfo';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import './scss/App.scss';
 
 class App extends React.Component {
@@ -98,71 +99,73 @@ class App extends React.Component {
     
     return (
       <Router>
-        <Route exact path="/"
-          render={routeProps => (
-            <div className="App">
-              <div className="App-header">
-                <TopBar
-                  campid=""
-                  campname={campName}
-                  sectionname=""
-                />
+        <Suspense fallback={<CircularProgress />}>
+          <Route exact path="/"
+            render={routeProps => (
+              <div className="App">
+                <div className="App-header">
+                  <TopBar
+                    campid=""
+                    campname={campName}
+                    sectionname=""
+                  />
+                </div>
+                <CampSelect />
               </div>
-              <CampSelect />
-            </div>
-          )}
-        />
-        <Route path="/:campid/:section?"
-          render={routeProps => {
-            const { isLoaded, campData, campConfig } = this.state;
-            let sectionSelected = routeProps.match.params.section;
-            let campid = routeProps.match.params.campid;
-            let sectionIndex = 0;
-            let config: any = campConfig;
-            let sectionConfig: any = null;
-            let sectionName: string = "";
-            let sectionData: any = null;
-            if (campConfig && campData) {
-              for (let index = 0; index < config.length; index++) {
-                if (config[index].Name === sectionSelected) {
-                  sectionIndex = index;
-                  break;
+            )}
+          />
+          <Route path="/:campid/:section?"
+            render={routeProps => {
+              const { isLoaded, campData, campConfig } = this.state;
+              let sectionSelected = routeProps.match.params.section;
+              let campid = routeProps.match.params.campid;
+              let sectionIndex = 0;
+              let config: any = campConfig;
+              let sectionConfig: any = null;
+              let sectionName: string = "";
+              let sectionData: any = null;
+              if (campConfig && campData) {
+                for (let index = 0; index < config.length; index++) {
+                  if (config[index].Name === sectionSelected) {
+                    sectionIndex = index;
+                    break;
+                  }
                 }
+                sectionConfig = campConfig[sectionIndex];
+                sectionName = sectionConfig.Name;
+                sectionData = campData[sectionName];
               }
-              sectionConfig = campConfig[sectionIndex];
-              sectionName = sectionConfig.Name;
-              sectionData = campData[sectionName];
-            }
-            if (!isLoaded) {
-              this.loadCampInfo( campid );
-            }
-            return (
-            <div className="App">
-              <div className="App-header">
-                <TopBar
-                  campid={campid}
-                  campname={campName}
-                  sectionname={sectionName}
-                />
+              if (!isLoaded) {
+                this.loadCampInfo( campid );
+              }
+              return (
+              <div className="App">
+                <div className="App-header">
+                  <TopBar
+                    campid={campid}
+                    campname={campName}
+                    sectionname={sectionName}
+                  />
+                </div>
+                <div className="App-main">
+                  <CampInfo
+                    isLoaded={isLoaded}
+                    sectionConfig={sectionConfig}
+                    sectionData={sectionData}
+                  />
+                </div>
+                <div className="App-footer">
+                  <BottomBar
+                    index={sectionIndex}
+                    campid={campid}
+                    campConfig={campConfig}
+                  />
+                </div>
               </div>
-              <div className="App-main">
-                <CampInfo
-                  isLoaded={isLoaded}
-                  sectionConfig={sectionConfig}
-                  sectionData={sectionData}
-                />
-              </div>
-              <div className="App-footer">
-                <BottomBar
-                  index={sectionIndex}
-                  campid={campid}
-                  campConfig={campConfig}
-                />
-              </div>
-            </div>
-            )
-          }}
-        />
+              )
+            }}
+          />
+        </Suspense>
       </Router>
     );
   }

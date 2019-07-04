@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -7,11 +8,21 @@ import Typography from '@material-ui/core/Typography';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BusinessIcon from '@material-ui/icons/Business';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { withTranslation, WithTranslation } from 'react-i18next';
+import i18n from './i18n';
+
+
+// define the function outside of component scope
+const changeLanguage = (lng) => {
+  i18n.changeLanguage(lng);
+};
 
 interface TopBarProps {
   campid: string;
@@ -19,7 +30,7 @@ interface TopBarProps {
   sectionname: string;
 }
 
-class TopBar extends React.Component<TopBarProps, {}> {
+class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
   state = {
     open: false,
     error: null,
@@ -30,10 +41,6 @@ class TopBar extends React.Component<TopBarProps, {}> {
     sectionName: ''
   };
 
-  toggleDrawer = () => () => {
-    this.setState(state => ({ open: !this.state.open }));
-  };
-  
   componentWillReceiveProps(nextProps) {
     this.setState({
       campid: nextProps.campid,
@@ -51,14 +58,20 @@ class TopBar extends React.Component<TopBarProps, {}> {
         this.setState({isLoaded: true, campList: data.camps});
       },
       (error) => {
-        this.setState({isLoaded: true, error});
         console.log(error);
+        this.setState({isLoaded: true, error});
       }
     );
   }
   
+  toggleDrawer = () => () => {
+    this.setState(state => ({ open: !this.state.open }));
+  };
+  
   render() {
-    const { campName, sectionName } = this.state
+    const { campName, sectionName } = this.state;
+    const { t } = this.props;
+    
     return (
       <AppBar position="static">
         <Toolbar>
@@ -78,42 +91,48 @@ class TopBar extends React.Component<TopBarProps, {}> {
           onClose={this.toggleDrawer()}
           onOpen={this.toggleDrawer()}
         >
-          <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer()}
-            onKeyDown={this.toggleDrawer()}
-          >
-            <List>
-              <ListItem>
-                <ListItemText>Select a camp:</ListItemText>
-              </ListItem>
-              { this.state.isLoaded
-                ? this.state.campList.map((item) => {
-                  // Had to cast item to "any" for it to not crash with error TS2339
-                  let camp: any = item;
-                  return (
-                  <ListItem button
-                    key={camp.name}
-                    selected={this.props.campid === camp.id}
-                    component="a"
-                    href={'/'+camp.id}
-                  >
-                    <ListItemIcon><BusinessIcon /></ListItemIcon>
-                    <ListItemText primary={camp.name} />
-                  </ListItem>
-                )})
-                : <ListItem>
-                    <ListItemIcon><CircularProgress /></ListItemIcon>
-                    <ListItemText>Fetching list of camps from the server...</ListItemText>
-                  </ListItem>
-              }
-            </List>
-          </div>
+          <List>
+            <ListItem>
+              <ListItemText>{t('language')}:</ListItemText>
+              <ListItemSecondaryAction>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => changeLanguage('en')}
+                >Eng</Button>
+                <Button
+                  variant="outlined"
+                  onClick={(e) => changeLanguage('zh')}
+                >中文</Button>
+              </ListItemSecondaryAction>
+            </ListItem>
+            <ListSubheader>
+              {t('campselect.title')}:
+            </ListSubheader>
+            { this.state.isLoaded
+              ? this.state.campList.map((item) => {
+                // Had to cast item to "any" for it to not crash with error TS2339
+                let camp: any = item;
+                return (
+                <ListItem button
+                  key={camp.name}
+                  selected={this.props.campid === camp.id}
+                  component="a"
+                  href={'/'+camp.id}
+                >
+                  <ListItemIcon><BusinessIcon /></ListItemIcon>
+                  <ListItemText primary={camp.name} />
+                </ListItem>
+              )})
+              : <ListItem>
+                  <ListItemIcon><CircularProgress /></ListItemIcon>
+                  <ListItemText>{t('campselect.loading')}...</ListItemText>
+                </ListItem>
+            }
+          </List>
         </SwipeableDrawer>
       </AppBar>
     );
   }
 }
 
-export default TopBar;
+export default withTranslation()(TopBar);
