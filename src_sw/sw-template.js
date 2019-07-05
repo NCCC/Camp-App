@@ -40,9 +40,10 @@ workbox.routing.registerRoute(
       })
     );
 
+// Network first for API calls, since we want this to be updated whenever possible.
 workbox.routing.registerRoute(
   /^https:\/\/api\.nccc\.se\//,
-  workbox.strategies.cacheFirst({
+  workbox.strategies.networkFirst({
         cacheName: 'api-cache',
         plugins: [
           new workbox.expiration.Plugin({
