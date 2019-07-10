@@ -5,6 +5,7 @@
   * [ ] Make the "Select a camp" menu nested, so we can have Summer Camp as a group with all the different camps as sub-items, f.ex.
   * [ ] Detect links and e-mails in Information. Or use Markup? But could be too complicated for users. Alternatively: Combine Information and Contact Section so we can use the same columns for Phone, Link, Email.
   * [ ] Add contact details for submitting bug reports
+  * [ ] Instead of hard coding each camp in PHP, maybe actually use a Google Sheets for adding and renaming camps too?
 
 ### Wishlist (Less important todos)
   * [ ] Graphical schedule
