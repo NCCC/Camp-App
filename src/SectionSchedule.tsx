@@ -11,14 +11,14 @@ interface SectionScheduleProps {
 class SectionSchedule extends React.Component<SectionScheduleProps & WithTranslation, {}> {
   state = {
     now: new Date(),
-    nowTimer: null
+    nowTimer: 0
   }
   
   constructor(props) {
     super(props);
     this.state = {
       now: new Date(),
-      nowTimer: null
+      nowTimer: 0
     }
   }
   
@@ -26,6 +26,11 @@ class SectionSchedule extends React.Component<SectionScheduleProps & WithTransla
     let timer = setInterval(this.nowInterval.bind(this), SCHEDULE_UPDATE_TIME);
     // store intervalId in the state so it can be accessed later:
     this.setState({nowTimer: timer});
+  }
+  
+  componentWillUnmount() {
+    const { nowTimer } = this.state;
+    clearInterval( nowTimer );
   }
   
   nowInterval() {
