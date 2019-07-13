@@ -60,7 +60,7 @@ class InformationCard extends React.Component<InformationCardProps, {}> {
           ? (<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
             <CardContent>
               {information.Text.split('\n').map((line,index) => (
-                !line.match(/^\s+$/)
+                !line.match(/^\s*$/)
                 ? (<Typography variant="body1" key={index}>
                   {line}
                 </Typography>)
