@@ -16,7 +16,7 @@ class App extends React.Component {
     campLoadedId: 0,
     campName: '',
     campData: {},
-    campConfig: null
+    campConfig: {}
   };
   
   componentWillMount() {
@@ -169,9 +169,11 @@ class App extends React.Component {
                     break;
                   }
                 }
-                sectionConfig = campConfig[sectionIndex];
-                sectionName = sectionConfig.Name;
-                sectionData = campData[sectionName];
+                if (campConfig[sectionIndex]) {
+                  sectionConfig = campConfig[sectionIndex];
+                  sectionName = sectionConfig.Name;
+                  sectionData = campData[sectionName];
+                }
               }
               return (
               <div className="App">
