@@ -27,7 +27,6 @@ class App extends React.Component {
       this.state.redirect = pathname;
     } else {
       console.log('Camp App: First load - No saved pathname, do nothing.' );
-      this.setState( {firstLoad: false} );
     }
   }
 
