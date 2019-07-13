@@ -15,7 +15,7 @@ class App extends React.Component {
     campLoadedId: 0,
     campName: '',
     campData: {},
-    campConfig: {}
+    campConfig: []
   };
   
   constructor( props ) {
