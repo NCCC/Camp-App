@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import CampSelect from './CampSelect';
@@ -9,6 +9,8 @@ import './scss/App.scss';
 
 class App extends React.Component {
   state = {
+    firstLoad: true,
+    redirect: '',
     error: null,
     sectionSelectedIndex: 0,
     campLoadedId: 0,
@@ -17,8 +19,29 @@ class App extends React.Component {
     campConfig: null
   };
   
+  componentWillMount() {
+    const { firstLoad } = this.state;
+
+    if (firstLoad) {
+      let pathname = localStorage.getItem('pathname');
+      if (pathname) {
+        console.log('Camp App: First load and pathname is set, loading saved pathname:',pathname);
+        this.setState( {firstLoad: false, redirect: pathname} );
+      } else {
+        console.log('Camp App: First load - No saved pathname, do nothing.' );
+        this.setState( {firstLoad: false} );
+      }
+    }
+  }
+
+  saveRoute(route) {
+    let pathname = route.location.pathname;
+    console.log('Camp App: Saving pathname: ', pathname);
+    localStorage.setItem( 'pathname', pathname );
+  }
+
   loadCampInfo = (campid) => {
-    console.log('Loading info for camp selected: '+campid);
+    console.log('Camp App: Loading info for camp selected: '+campid);
     fetch('https://api.nccc.se/camps/'+campid)
     .then(result => result.json())
     .then(
@@ -70,14 +93,14 @@ class App extends React.Component {
             campConfig: config
           });
         } else {
-          let error = 'Error when fetching camp data - Invalid data received.';
+          let error = 'Camp App: Error when fetching camp data - Invalid data received.';
           this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
           console.log(error);
         }
       },
       (error) => {
         this.setState({campLoadedId: campid, campData: null, campConfig: null, error});
-        console.log("Fetching camp info failed:", error);
+        console.log('Camp App:  Fetching camp info failed:', error);
       }
     );
   };
@@ -95,30 +118,40 @@ class App extends React.Component {
   }
   
   render() {
-    const { campName } = this.state
+    const { campName, redirect } = this.state
     
-    console.log('Rerendering App.');
+    console.log('Camp App: Rerendering...');
     
     return (
       <Router>
         <Suspense fallback={<CircularProgress />}>
+          { redirect
+            ? <Redirect
+                to={redirect}
+              />
+            : null
+          }
           <Route exact path="/"
-            render={routeProps => (
-              <div className="App">
-                <div className="App-header">
-                  <TopBar
-                    campid=""
-                    campname={campName}
-                    sectionname=""
-                  />
+            render={routeProps => {
+              this.saveRoute( routeProps )
+              return (
+                <div className="App">
+                  <div className="App-header">
+                    <TopBar
+                      campid=""
+                      campname={campName}
+                      sectionname=""
+                    />
+                  </div>
+                  <CampSelect />
                 </div>
-                <CampSelect />
-              </div>
-            )}
+              )}
+            }
           />
           <Route path="/:campid/:section?"
             render={routeProps => {
               const { campLoadedId, campData, campConfig } = this.state;
+              this.saveRoute( routeProps )
               let sectionSelected = routeProps.match.params.section;
               let campid = routeProps.match.params.campid;
               let sectionIndex = 0;
