@@ -64,7 +64,7 @@ class InformationCard extends React.Component<InformationCardProps, {}> {
                 ? (<Typography variant="body1" key={index}>
                   {line}
                 </Typography>)
-                : (<br/>)
+                : (<br key={index} />)
               ))}
             </CardContent>
           </Collapse>)
