@@ -8,6 +8,7 @@
   * [ ] Instead of hard coding each camp in PHP, maybe actually use a Google Sheets for adding and renaming camps too?
 
 ### Wishlist (Less important todos)
+  * [ ] Select colors for icons in Information (and Map and Contact?)
   * [ ] Graphical schedule
   * [ ] Show multiple camp schedules side by side
   * [ ] Instead of making separate Google Sheets for Chinese and English version of the same camp, make it possible to use the same Sheet but have one column for English and one for Chinese
