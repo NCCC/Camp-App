@@ -9,7 +9,6 @@ import './scss/App.scss';
 
 class App extends React.Component {
   state = {
-    firstLoad: true,
     redirect: '',
     error: null,
     sectionSelectedIndex: 0,
@@ -19,18 +18,16 @@ class App extends React.Component {
     campConfig: {}
   };
   
-  componentWillMount() {
-    const { firstLoad } = this.state;
+  constructor( props ) {
+    super( props );
 
-    if (firstLoad) {
-      let pathname = localStorage.getItem('pathname');
-      if (pathname) {
-        console.log('Camp App: First load and pathname is set, loading saved pathname:',pathname);
-        this.setState( {firstLoad: false, redirect: pathname} );
-      } else {
-        console.log('Camp App: First load - No saved pathname, do nothing.' );
-        this.setState( {firstLoad: false} );
-      }
+    let pathname = localStorage.getItem('pathname');
+    if (pathname) {
+      console.log('Camp App: First load and pathname is set, loading saved pathname:',pathname);
+      this.state.redirect = pathname;
+    } else {
+      console.log('Camp App: First load - No saved pathname, do nothing.' );
+      this.setState( {firstLoad: false} );
     }
   }
 
