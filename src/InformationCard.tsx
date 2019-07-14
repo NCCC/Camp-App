@@ -41,7 +41,7 @@ class InformationCard extends React.Component<InformationCardProps, {}> {
         <CardHeader
           title={information.Title}
           avatar={
-            <Avatar>
+            <Avatar style={{backgroundColor: (information.Color ? information.Color : 'black')}}>
               <Icon>{information.Icon}</Icon>
             </Avatar>
           }
