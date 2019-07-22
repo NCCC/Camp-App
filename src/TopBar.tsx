@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,130 +16,111 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import BusinessIcon from '@material-ui/icons/Business';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import i18n from './i18n';
 
 import './scss/TopBar.scss';
 
-// define the function outside of component scope
-const changeLanguage = (lng) => {
-  i18n.changeLanguage(lng);
-};
+export default function TopBar( props ) {
+  const { campID, campName, sectionName } = props;
+  const { t } = useTranslation();
+  
+  const [open, setOpen] = React.useState( false );
+  const [error, setError] = React.useState( null );
+  const [campList, setCampList] = React.useState( [] );
+  const [isLoaded, setIsLoaded] = React.useState( false );
 
-interface TopBarProps {
-  campid: string;
-  campname: string;
-  sectionname: string;
-}
-
-class TopBar extends React.Component<TopBarProps & WithTranslation, {}> {
-  state = {
-    open: false,
-    error: null,
-    campList: [],
-    isLoaded: false,
-    campid: '',
-    campName: '',
-    sectionName: ''
-  };
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      campid: nextProps.campid,
-      campName: nextProps.campname,
-      sectionName: nextProps.sectionname
-    });  
-  }
-
-  componentDidMount() {
-    fetch('https://api.nccc.se/camps/')
-    .then(result => result.json())
-    .then(
-      (data) => {
-        console.log('List of camps fetched from server.');
-        this.setState({isLoaded: true, campList: data.camps});
-      },
-      (error) => {
-        console.log('Fetching list of camps failed:',error);
-        this.setState({isLoaded: true, error});
-      }
-    );
+  useEffect(() => {
+    async function fetchData() {
+      fetch('https://api.nccc.se/camps/')
+      .then(result => result.json())
+      .then(
+        (data) => {
+          console.log('List of camps fetched from server.');
+          setIsLoaded( true );
+          setCampList( data.camps );
+        },
+        (error) => {
+          console.log('Fetching list of camps failed:',error);
+          setIsLoaded( true );
+          setError( error );
+        }
+      );
+    }
+    fetchData();
+  }, []);
+  
+  const toggleDrawer = () => {
+    setOpen( !open );
   }
   
-  toggleDrawer = () => () => {
-    this.setState(state => ({ open: !this.state.open }));
-  };
+  function changeLanguage( lng ) {
+    i18n.changeLanguage( lng );
+  }
   
-  render() {
-    const { campName, sectionName } = this.state;
-    const { t } = this.props;
-    
-    return (
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton color="inherit" aria-label="Menu"
-                        onClick={this.toggleDrawer()}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" noWrap>
-            { campName ?
-              (campName+' - '+sectionName) :
-              t('campapp')
-            }
-          </Typography>
-        </Toolbar>
-        <SwipeableDrawer
-          classes={{paper: 'main_menu'}}
-          open={this.state.open}
-          onClose={this.toggleDrawer()}
-          onOpen={this.toggleDrawer()}
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton color="inherit" aria-label="Menu"
+                      onClick={toggleDrawer}>
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" color="inherit" noWrap>
+          { campName ?
+            (campName+' - '+sectionName) :
+            t('campapp')
+          }
+        </Typography>
+      </Toolbar>
+      <SwipeableDrawer
+        classes={{paper: 'main_menu'}}
+        open={open}
+        onClose={toggleDrawer}
+        onOpen={toggleDrawer}
+      >
+        <List>
+          <ListItem>
+            <ListItemText>{t('language')}:</ListItemText>
+            <ListItemSecondaryAction>
+              <Button
+                variant="outlined"
+                onClick={(e) => changeLanguage('en')}
+              >Eng</Button>
+              <Button
+                variant="outlined"
+                onClick={(e) => changeLanguage('zh')}
+              >中文</Button>
+            </ListItemSecondaryAction>
+          </ListItem>
+        </List>
+        <List
+          onClick={toggleDrawer}
         >
-          <List>
-            <ListItem>
-              <ListItemText>{t('language')}:</ListItemText>
-              <ListItemSecondaryAction>
-                <Button
-                  variant="outlined"
-                  onClick={(e) => changeLanguage('en')}
-                >Eng</Button>
-                <Button
-                  variant="outlined"
-                  onClick={(e) => changeLanguage('zh')}
-                >中文</Button>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </List>
-          <List
-            onClick={this.toggleDrawer()}
-          >
-            <ListSubheader>
-              {t('campselect.title')}:
-            </ListSubheader>
-            { this.state.isLoaded
-              ? this.state.campList.map((item) => {
-                // Had to cast item to "any" for it to not crash with error TS2339
-                let camp: any = item;
-                return (
-                <ListItem button
-                  key={camp.name}
-                  selected={this.props.campid === camp.id}
-                  component={Link}
-                  to={'/'+camp.id}
-                >
-                  <ListItemIcon><BusinessIcon /></ListItemIcon>
-                  <ListItemText primary={camp.name} />
-                </ListItem>
-              )})
-              : <ListItem>
-                  <ListItemIcon><CircularProgress /></ListItemIcon>
-                  <ListItemText>{t('campselect.loading')}...</ListItemText>
-                </ListItem>
-            }
-          </List>
-        </SwipeableDrawer>
-      </AppBar>
-    );
-  }
+          <ListSubheader>
+            {t('campselect.title')}:
+          </ListSubheader>
+          { isLoaded
+            ? campList.map((item) => {
+              // Had to cast item to "any" for it to not crash with error TS2339
+              let camp: any = item;
+              return (
+              <ListItem button
+                key={camp.name}
+                selected={campID === camp.id}
+                component={Link}
+                to={'/'+camp.id}
+              >
+                <ListItemIcon><BusinessIcon /></ListItemIcon>
+                <ListItemText primary={camp.name} />
+              </ListItem>
+            )})
+            : <ListItem>
+                <ListItemIcon><CircularProgress /></ListItemIcon>
+                <ListItemText>{t('campselect.loading')}...</ListItemText>
+              </ListItem>
+          }
+        </List>
+      </SwipeableDrawer>
+    </AppBar>
+  )
 }
-
-export default withTranslation()(TopBar);

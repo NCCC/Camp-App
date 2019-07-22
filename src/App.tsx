@@ -134,9 +134,9 @@ class App extends React.Component {
                 <div className="App">
                   <div className="App-header">
                     <TopBar
-                      campid=""
-                      campname={campName}
-                      sectionname=""
+                      campID=""
+                      campName={campName}
+                      sectionName=""
                     />
                   </div>
                   <CampSelect />

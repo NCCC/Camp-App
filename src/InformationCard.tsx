@@ -1,5 +1,6 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
@@ -9,70 +10,65 @@ import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
 
-const styles = theme => ({
+const useStyles = makeStyles( theme => ({
   expand: {
     transform: 'rotate(0deg)',
     marginLeft: 'auto',
     transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
+      duration: theme.transitions.duration.short,
     }),
   },
   expandOpen: {
     transform: 'rotate(180deg)',
   }
-});
+}) );
 
-interface InformationCardProps {
-  information: any
-}
+export default function InformationCard( props ) {
+  const { information } = props;
+  const classes = useStyles();
+  const [expanded, setExpanded] = React.useState( false );
 
-class InformationCard extends React.Component<InformationCardProps, {}> {
-  state = { expanded: false };
-
-  handleExpandClick = () => {
-    this.setState(state => ({ expanded: !this.state.expanded }));
+  const handleExpandClick = () => {
+    setExpanded( !expanded );
   };
   
-  render() {
-    const { information } = this.props;
-    
-    return (
-      <Card classes={{ root: 'CampCard' }} >
-        <CardHeader
-          title={information.Title}
-          avatar={
-            <Avatar style={{backgroundColor: (information.Color ? information.Color : 'black')}}>
-              <Icon>{information.Icon}</Icon>
-            </Avatar>
-          }
-          action={ information.Text
-            ? (<IconButton
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label="Show more"
-            >
-              <Icon>expand_more</Icon>
-            </IconButton>)
-            : ""
-          }
-        />
-        { information.Text
-          ? (<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              {information.Text.split('\n').map((line,index) => (
-                !line.match(/^\s*$/)
-                ? (<Typography variant="body1" key={index}>
-                  {line}
-                </Typography>)
-                : (<br key={index} />)
-              ))}
-            </CardContent>
-          </Collapse>)
+  return (
+    <Card classes={{ root: 'CampCard' }} >
+      <CardHeader
+        title={information.Title}
+        avatar={
+          <Avatar style={{backgroundColor: (information.Color ? information.Color : 'black')}}>
+            <Icon>{information.Icon}</Icon>
+          </Avatar>
+        }
+        action={ information.Text
+          ? (<IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded,
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="Show more"
+          >
+            <Icon>expand_more</Icon>
+          </IconButton>)
           : ""
         }
-      </Card>
-    )
-  }
+      />
+      { information.Text
+        ? (<Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            {information.Text.split('\n').map((line,index) => (
+              !line.match(/^\s*$/)
+              ? (<Typography variant="body1" key={index}>
+                {line}
+              </Typography>)
+              : (<br key={index} />)
+            ))}
+          </CardContent>
+        </Collapse>)
+        : ""
+      }
+    </Card>
+  )
 }
-
-export default withStyles(styles)(InformationCard);

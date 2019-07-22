@@ -8,92 +8,95 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
-interface ContactCardProps {
-  data: any
+function ContactCardDialog( props ) {
+  const { open, onClose, data, handleCall } = props;
+  const { t } = useTranslation();
+  
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+    >
+      <DialogTitle>{t('contact.call_title')}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {t('contact.call_text', {data})}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <IconButton onClick={handleCall} color="primary">
+          <Icon>call</Icon>
+        </IconButton>
+        <IconButton onClick={onClose} color="secondary" autoFocus>
+          <Icon>cancel</Icon>
+        </IconButton>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
-class ContactCard extends React.Component<ContactCardProps & WithTranslation, {}> {
-  state = {
-    dialog: false
-  }
+export default function ContactCard( props ) {
+  const { data } = props;
+  const [open, setOpen] = React.useState(false);
   
-  handleCallDialog = () => {
-    this.setState( state => ({dialog: true}) );
+  const handleCallDialog = () => {
+    setOpen( true );
   }
 
-  handleClose = () => {
-    this.setState( state => ({dialog: false}) );
+  const handleClose = () => {
+    setOpen( false );
   }
 
-  handleCall = () => {
-    this.setState( state => ({dialog: false}) );
-    window.location.href = 'tel:'+this.props.data.Phone;
+  const handleCall = () => {
+    setOpen( false );
+    window.location.href = 'tel:'+data.Phone;
   }
   
-  handleLink = () => {
-    window.open(this.props.data.URL, '_blank');
+  const handleLink = () => {
+    window.open(data.URL, '_blank');
   }
   
-  handleEmail = () => {
-    window.location.href = 'mailto:'+this.props.data.Email;
+  const handleEmail = () => {
+    window.location.href = 'mailto:'+data.Email;
   }
 
-  render() {
-    const { dialog } = this.state;
-    const { data, t } = this.props;
-    return (
-      <Card className="CampCard">
-        <CardHeader
-          avatar={<Icon>{data.Icon}</Icon>}
-          title={data.Title}
-          subheader={data.Phone}
-          action={
-            <div>
-            { data.Phone
-              ? (<IconButton aria-label="Phone" color="primary" onClick={this.handleCallDialog}>
-                <Icon>phone</Icon>
-              </IconButton>)
-              : ''
-            }
-            { data.Email 
-              ? (<IconButton aria-label="Link" color="primary" onClick={this.handleEmail}>
-                <Icon>email</Icon>
-              </IconButton>)
-              : ''
-            }
-            { data.URL 
-              ? (<IconButton aria-label="Link" color="primary" onClick={this.handleLink}>
-                <Icon>link</Icon>
-              </IconButton>)
-              : ''
-            }
-            </div>
+  return (
+    <Card className="CampCard">
+      <CardHeader
+        avatar={<Icon>{data.Icon}</Icon>}
+        title={data.Title}
+        subheader={data.Phone}
+        action={
+          <div>
+          { data.Phone
+            ? (<IconButton aria-label="Phone" color="primary" onClick={handleCallDialog}>
+              <Icon>phone</Icon>
+            </IconButton>)
+            : ''
           }
-        />
-        <Dialog
-          open={dialog}
-          onClose={this.handleClose}
-        >
-          <DialogTitle>{t('contact.call_title')}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {t('contact.call_text', {data})}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <IconButton onClick={this.handleCall} color="primary">
-              <Icon>call</Icon>
-            </IconButton>
-            <IconButton onClick={this.handleClose} color="secondary" autoFocus>
-              <Icon>cancel</Icon>
-            </IconButton>
-          </DialogActions>
-        </Dialog>
-      </Card>
-    )
-  }
+          { data.Email 
+            ? (<IconButton aria-label="Link" color="primary" onClick={handleEmail}>
+              <Icon>email</Icon>
+            </IconButton>)
+            : ''
+          }
+          { data.URL 
+            ? (<IconButton aria-label="Link" color="primary" onClick={handleLink}>
+              <Icon>link</Icon>
+            </IconButton>)
+            : ''
+          }
+          </div>
+        }
+      />
+      <ContactCardDialog
+        open={open}
+        onClose={handleClose}
+        data={data}
+        handleCall={handleCall}
+      />
+    </Card>
+  )
 }
-
-export default withTranslation()(ContactCard);

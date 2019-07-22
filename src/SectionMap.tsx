@@ -12,82 +12,73 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-import { withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import './scss/SectionMap.scss';
 
-interface SectionMapProps {
-  mapList: any;
-}
+export default function SectionMap( props ) {
+  const { mapList } = props;
+  const { t } = useTranslation();
+  const [open, setOpen] = React.useState(false);
 
-class SectionMap extends React.Component<SectionMapProps & WithTranslation, {}> {
-  state = {
-    open: false
+  const handleOpen = () => {
+    setOpen( true );
   };
 
-  handleOpen = () => {
-    this.setState( {open: true});
+  const handleClose = () => {
+    setOpen( false );
   };
 
-  handleClose = () => {
-    this.setState( {open: false});
-  };
-
-  render() {
-    const { t, mapList } = this.props;
-    let mapURL: string = '';
-    let list: any[] = mapList.slice(); // Make a copy
-    if (list[0].Name === 'Map Image' || list[0].Location.startsWith('http')) {
-      mapURL = list[0].Location;
-      list.shift();
-    }
-    return (
-      <Card>
-        <CardActionArea
-          onClick={this.handleOpen}
+  let mapURL: string = '';
+  let list: any[] = mapList.slice(); // Make a copy
+  if (list[0].Name === 'Map Image' || list[0].Location.startsWith('http')) {
+    mapURL = list[0].Location;
+    list.shift();
+  }
+  return (
+    <Card>
+      <CardActionArea
+        onClick={handleOpen}
+      >
+        <img
+          src={mapURL}
+          className="map_image"
+          title={t('map.title')}
+          alt={t('map.title')}
+        />
+      </CardActionArea>
+      <List>
+      { list.map( (row, index) => (
+        <ListItem key={index}>
+          <ListItemAvatar>
+            <Avatar>
+              <Icon>{row.Icon}</Icon>
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={row.Name} secondary={row.Location} />
+        </ListItem>
+      ))}
+      </List>
+      <Dialog
+        fullScreen
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={handleClose}
         >
+        <DialogTitle id="simple-dialog-title">
+          <Typography variant="h4">{t('map.title')}</Typography>
+          <IconButton aria-label="Close" className="map_close_button" onClick={handleClose}>
+            <Icon>close</Icon>
+          </IconButton>
+        </DialogTitle>
+        <Box className="map_image_container">
           <img
             src={mapURL}
-            className="map_image"
             title={t('map.title')}
             alt={t('map.title')}
           />
-        </CardActionArea>
-        <List>
-        { list.map( (row, index) => (
-          <ListItem key={index}>
-            <ListItemAvatar>
-              <Avatar>
-                <Icon>{row.Icon}</Icon>
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={row.Name} secondary={row.Location} />
-          </ListItem>
-        ))}
-        </List>
-        <Dialog
-          fullScreen
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-          open={this.state.open}
-          onClose={this.handleClose}
-          >
-          <DialogTitle id="simple-dialog-title">
-            <Typography variant="h4">{t('map.title')}</Typography>
-            <IconButton aria-label="Close" className="map_close_button" onClick={this.handleClose}>
-              <Icon>close</Icon>
-            </IconButton>
-          </DialogTitle>
-          <Box className="map_image_container">
-            <img
-              src={mapURL}
-              title={t('map.title')}
-              alt={t('map.title')}
-            />
-          </Box>
-        </Dialog>
-      </Card>
-    )
-  }
+        </Box>
+      </Dialog>
+    </Card>
+  )
 }
-
-export default withTranslation()(SectionMap);

@@ -1,24 +1,16 @@
 import React from 'react';
 import InformationCard from './InformationCard';
 
-interface SectionInformationProps {
-  informationList: any;
+export default function SectionInformation(props) {
+  const { informationList } = props;
+  return (
+    <div>
+      { informationList.map( (row, index) => (
+          <InformationCard
+            key={index}
+            information={row}
+          />
+      ))}
+    </div>
+  )
 }
-
-class SectionInformation extends React.Component<SectionInformationProps, {}> {
-  render() {
-    const { informationList } = this.props;
-    return (
-      <div>
-        { informationList.map( (row, index) => (
-            <InformationCard
-              key={index}
-              information={row}
-            />
-        ))}
-      </div>
-    )
-  }
-}
-
-export default SectionInformation;
