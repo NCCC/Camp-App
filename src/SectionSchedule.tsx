@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import ScheduleCard from './ScheduleCard';
 import { useTranslation } from 'react-i18next';
 
-const SCHEDULE_UPDATE_TIME = 15*1000;
+const SCHEDULE_UPDATE_TIME = 5*1000;
+//                          1=day          2=month        3=year   kl.   4=hour         5=minutes      6=seconds
+const NORDIC_DATE_REGEX = /([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/;
 
 export default function SectionSchedule( props ) {
   const { scheduleList } = props;
@@ -10,22 +12,23 @@ export default function SectionSchedule( props ) {
   const [now, setNow] = React.useState( new Date() );
   
   useEffect( () => {
-    console.log( 'Camp App: Starting Schedule setInterval...' );
     var timerID = setInterval( () => nowInterval(), SCHEDULE_UPDATE_TIME );
   
     return function cleanup() {
-      console.log( 'Camp App: Clearing Schedule setInterval...' );
       clearInterval( timerID );
     }
   })
   
   function nowInterval() {
-    setNow( new Date() );
+    let newNow = new Date();
+    if (now.getMinutes() !== newNow.getMinutes()) {
+      console.log( 'Camp App: Updating schedule...' );
+      setNow( newNow );
+    }
   }
   
   function parseNordicDate( datestring ) {
-    //                               1=day          2=month        3=year   kl.   4=hour         5=minutes      6=seconds
-    let matches = datestring.match(/([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/);
+    let matches = datestring.match( NORDIC_DATE_REGEX );
     return new Date(matches[3],matches[2]-1,matches[1],matches[4],matches[5],matches[6],0);
   }
 
