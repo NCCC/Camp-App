@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import ScrollToTop from './ScrollToTop';
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
 import CampSelect from './CampSelect';
@@ -127,77 +128,79 @@ class App extends React.Component {
               />
             : null
           }
-          <Route exact path="/"
-            render={routeProps => {
-              this.saveRoute( routeProps )
-              return (
+          <ScrollToTop>
+            <Route exact path="/"
+              render={routeProps => {
+                this.saveRoute( routeProps )
+                return (
+                  <div className="App">
+                    <div className="App-header">
+                      <TopBar
+                        campID=""
+                        campName={campName}
+                        sectionName=""
+                      />
+                    </div>
+                    <CampSelect />
+                  </div>
+                )}
+              }
+            />
+            <Route path="/:campid/:section?"
+              render={routeProps => {
+                const { campLoadedId, campData, campConfig } = this.state;
+                this.saveRoute( routeProps )
+                let sectionSelected = routeProps.match.params.section;
+                let campid = routeProps.match.params.campid;
+                let sectionIndex = 0;
+                let config: any = campConfig;
+                let sectionConfig: any = null;
+                let sectionName: string = "";
+                let sectionData: any = null;
+                if (campid !== campLoadedId) {
+                  this.loadCampInfo( campid );
+                }
+                else if (campConfig && campData) {
+                  for (let index = 0; index < config.length; index++) {
+                    if (config[index].Name === sectionSelected) {
+                      sectionIndex = index;
+                      break;
+                    }
+                  }
+                  if (campConfig[sectionIndex]) {
+                    sectionConfig = campConfig[sectionIndex];
+                    sectionName = sectionConfig.Name;
+                    sectionData = campData[sectionName];
+                  }
+                }
+                return (
                 <div className="App">
                   <div className="App-header">
                     <TopBar
-                      campID=""
-                      campName={campName}
-                      sectionName=""
+                      campid={campid}
+                      campname={campName}
+                      sectionname={sectionName}
                     />
                   </div>
-                  <CampSelect />
+                  <div className="App-main">
+                    <CampInfo
+                      isLoaded={campLoadedId===campid}
+                      sectionConfig={sectionConfig}
+                      sectionData={sectionData}
+                    />
+                  </div>
+                  <div className="App-footer">
+                    <BottomBar
+                      index={sectionIndex}
+                      campid={campid}
+                      campConfig={campConfig}
+                    />
+                  </div>
                 </div>
-              )}
-            }
-          />
-          <Route path="/:campid/:section?"
-            render={routeProps => {
-              const { campLoadedId, campData, campConfig } = this.state;
-              this.saveRoute( routeProps )
-              let sectionSelected = routeProps.match.params.section;
-              let campid = routeProps.match.params.campid;
-              let sectionIndex = 0;
-              let config: any = campConfig;
-              let sectionConfig: any = null;
-              let sectionName: string = "";
-              let sectionData: any = null;
-              if (campid !== campLoadedId) {
-                this.loadCampInfo( campid );
-              }
-              else if (campConfig && campData) {
-                for (let index = 0; index < config.length; index++) {
-                  if (config[index].Name === sectionSelected) {
-                    sectionIndex = index;
-                    break;
-                  }
-                }
-                if (campConfig[sectionIndex]) {
-                  sectionConfig = campConfig[sectionIndex];
-                  sectionName = sectionConfig.Name;
-                  sectionData = campData[sectionName];
-                }
-              }
-              return (
-              <div className="App">
-                <div className="App-header">
-                  <TopBar
-                    campid={campid}
-                    campname={campName}
-                    sectionname={sectionName}
-                  />
-                </div>
-                <div className="App-main">
-                  <CampInfo
-                    isLoaded={campLoadedId===campid}
-                    sectionConfig={sectionConfig}
-                    sectionData={sectionData}
-                  />
-                </div>
-                <div className="App-footer">
-                  <BottomBar
-                    index={sectionIndex}
-                    campid={campid}
-                    campConfig={campConfig}
-                  />
-                </div>
-              </div>
-              )
-            }}
-          />
+                )
+              }}
+            />
+          </ScrollToTop>
         </Suspense>
       </Router>
     );
