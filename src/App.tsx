@@ -11,8 +11,8 @@ import './scss/App.scss';
 export default function App() {
   console.log('Camp App: Rendering App...');
     
-  const [campData, setCampData] = useState<{ ID: number; Name: string; Sheets: {}; Config: any[]; }>( {
-    ID: 0,
+  const [campData, setCampData] = useState<{ ID: string; Name: string; Sheets: {}; Config: any[]; }>( {
+    ID: '',
     Name: '',
     Sheets: {},
     Config: []
@@ -20,11 +20,11 @@ export default function App() {
 
   let redirect = '';
   let pathname = localStorage.getItem('pathname');
-  if (pathname) {
-    console.log('Camp App: First load and pathname is set, loading saved pathname:',pathname);
+  if (pathname && pathname != '/') {
+    console.log('Camp App: First load and pathname is set, setting redirect variable to: ',pathname);
     redirect = pathname;
   } else {
-    console.log('Camp App: First load - No saved pathname, do nothing.' );
+    console.log('Camp App: First load - No saved pathname or pathname is /, do nothing.' );
   }
 
   function saveRoute(route) {
@@ -39,7 +39,7 @@ export default function App() {
     .then(result => result.json())
     .then(
       (data) => {
-        console.log('Data fetched complete for: '+campid);
+        console.log('Camp App: Data fetched complete for: '+campid);
         let sheets = {};
         let config: any[] = [];
         if (data.sheets) {
@@ -114,8 +114,12 @@ export default function App() {
           <Route exact path="/"
             render={routeProps => {
               if (redirect) {
+                console.log('Camp App: Redirect variable was set, redirecting user to "'+redirect+'"...');
+                let redirect_now = redirect;
+                // Reset the variable so we won't be redirected again
+                redirect = '';
                 return (<Redirect
-                          to={redirect}
+                          to={redirect_now}
                         />)
               } else {
                 saveRoute( routeProps );
@@ -124,7 +128,7 @@ export default function App() {
                     <div className="App-header">
                       <TopBar
                         campID=""
-                        campName={campData.Name}
+                        campName=""
                         sectionName=""
                       />
                     </div>
@@ -136,6 +140,8 @@ export default function App() {
           />
           <Route path="/:campid/:section?"
             render={routeProps => {
+              // Reset the redirect variable, won't be needed for the rest of this session (until a reload)
+              redirect = '';
               saveRoute( routeProps );
               let sectionSelected = routeProps.match.params.section;
               let campid = routeProps.match.params.campid;
@@ -164,9 +170,9 @@ export default function App() {
               <div className="App">
                 <div className="App-header">
                   <TopBar
-                    campid={campid}
-                    campname={campData.Name}
-                    sectionname={sectionName}
+                    campID={campid}
+                    campName={campData.Name}
+                    sectionName={sectionName}
                   />
                 </div>
                 <div className="App-main">

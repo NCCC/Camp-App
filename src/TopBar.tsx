@@ -13,7 +13,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import BusinessIcon from '@material-ui/icons/Business';
+import Icon from '@material-ui/core/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useTranslation } from 'react-i18next';
@@ -36,12 +36,12 @@ export default function TopBar( props ) {
       .then(result => result.json())
       .then(
         (data) => {
-          console.log('List of camps fetched from server.');
+          console.log('Camp App: List of camps fetched from server.');
           setIsLoaded( true );
           setCampList( data.camps );
         },
         (error) => {
-          console.log('Fetching list of camps failed:',error);
+          console.log('Camp App: Fetching list of camps failed:',error);
           setIsLoaded( true );
           setError( error );
         }
@@ -96,6 +96,15 @@ export default function TopBar( props ) {
         <List
           onClick={toggleDrawer}
         >
+          <ListItem button
+            key="0"
+            selected={campID === null}
+            component={Link}
+            to={'/'}
+          >
+            <ListItemIcon><Icon>home</Icon></ListItemIcon>
+            <ListItemText primary="Home" />
+          </ListItem>
           <ListSubheader>
             {t('campselect.title')}:
           </ListSubheader>
@@ -110,7 +119,7 @@ export default function TopBar( props ) {
                 component={Link}
                 to={'/'+camp.id}
               >
-                <ListItemIcon><BusinessIcon /></ListItemIcon>
+                <ListItemIcon><Icon>business</Icon></ListItemIcon>
                 <ListItemText primary={camp.name} />
               </ListItem>
             )})
