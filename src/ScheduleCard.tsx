@@ -83,7 +83,7 @@ export default function ScheduleCard( props ) {
             }
             return (
               <Typography variant="body1" key={index} style={eventStyle}>
-                {data.StartTime} - {data.EndTime}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
+                {data.Start} - {data.End}: {data.Name} {data.Location ? '('+data.Location+')' : ''}
               </Typography>
             )
           })}

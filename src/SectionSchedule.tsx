@@ -3,8 +3,6 @@ import ScheduleCard from './ScheduleCard';
 import { useTranslation } from 'react-i18next';
 
 const SCHEDULE_UPDATE_TIME = 5*1000;
-//                          1=day          2=month        3=year   kl.   4=hour         5=minutes      6=seconds
-const NORDIC_DATE_REGEX = /([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)[^0-9]*([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/;
 
 export default function SectionSchedule( props ) {
   const { scheduleList } = props;
@@ -27,11 +25,6 @@ export default function SectionSchedule( props ) {
     }
   }
   
-  function parseNordicDate( datestring ) {
-    let matches = datestring.match( NORDIC_DATE_REGEX );
-    return new Date(matches[3],matches[2]-1,matches[1],matches[4],matches[5],matches[6],0);
-  }
-
   function dayAndDate( date ) {
     return [
       t('schedule.sunday'),
@@ -64,14 +57,12 @@ export default function SectionSchedule( props ) {
   let days = {};
   for (let index = 0; index < data.length; index++) {
     let row_data = data[index];
-    if (!row_data.Start || !row_data.End)
+    if (!row_data.Date)
       continue;
-    let start = parseNordicDate( row_data.Start );
+    let start = new Date( Date.parse(row_data.Date+' '+row_data.Start) );
     row_data.StartDateObject = start;
-    let end = parseNordicDate( row_data.End );
+    let end = new Date( Date.parse(row_data.Date+' '+row_data.End) );
     row_data.EndDateObject = end;
-    row_data.StartTime = getHourMinutes( start );
-    row_data.EndTime = getHourMinutes( end );
     let day = dayAndDate( start );
     if (days[day]) {
       days[day].events.push( row_data );
