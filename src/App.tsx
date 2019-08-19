@@ -176,6 +176,7 @@ export default function App() {
                     campID={campid}
                     campName={campData.Name}
                     sectionName={sectionName}
+                    version={CAMP_APP_VERSION}
                   />
                 </div>
                 <div className="App-main">

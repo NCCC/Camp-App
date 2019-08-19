@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import SimpleCard from './SimpleCard';
 import ScheduleCard from './ScheduleCard';
 import Icon from '@material-ui/core/Icon';
-import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 
 const SCHEDULE_UPDATE_TIME = 5*1000;
