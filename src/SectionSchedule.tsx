@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
+import SimpleCard from './SimpleCard';
 import ScheduleCard from './ScheduleCard';
+import Icon from '@material-ui/core/Icon';
+import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 
 const SCHEDULE_UPDATE_TIME = 5*1000;
+const SCHEDULE_REGEX_DATE = /(\d{1,2})[./](\d{1,2})[./](\d{4}) (\d{1,2}):(\d{2})/;
+const SCHEDULE_REGEX_SQL_DATE = /([0-9]{4})-([0-9]{1,2})-([0-9]{1,2}) (\d{1,2}):(\d{2})/;
 
 export default function SectionSchedule( props ) {
   const { scheduleList } = props;
@@ -48,34 +53,46 @@ export default function SectionSchedule( props ) {
       t('schedule.avatar_saturday')
     ][date.getDay()];
   }
-
-  function getHourMinutes( date ) {
-    return (date.getHours() < 10 ? '0' : '')+date.getHours()+':'+(date.getMinutes() < 10 ? '0' : '')+date.getMinutes();
-  }
   
+  function makeDate( datestring ) {
+    let matches = datestring.match(SCHEDULE_REGEX_DATE);
+    if (matches)
+      return new Date(matches[3],matches[2]-1,matches[1],matches[4],matches[5],0,0);
+    matches = datestring.match(SCHEDULE_REGEX_SQL_DATE);
+    if (matches)
+      return new Date(matches[1],matches[2]-1,matches[3],matches[4],matches[5],0,0);
+    throw new Error("Unable to parse date: "+datestring);
+  }
+
   let data: any = scheduleList;
   let days = {};
-  for (let index = 0; index < data.length; index++) {
-    let row_data = data[index];
-    if (!row_data.Date)
-      continue;
-    let start = new Date( Date.parse(row_data.Date+' '+row_data.Start) );
-    row_data.StartDateObject = start;
-    let end = new Date( Date.parse(row_data.Date+' '+row_data.End) );
-    row_data.EndDateObject = end;
-    let day = dayAndDate( start );
-    if (days[day]) {
-      days[day].events.push( row_data );
-    } else {
-      start.setHours(0); start.setMinutes(0); start.setSeconds(0); start.setMilliseconds(0);
-      let avatar = getAvatar( start );
-      days[day] = {
-        date: start,
-        title: day,
-        avatar: avatar,
-        events: [row_data]
-      };
+  try {
+    for (let index = 0; index < data.length; index++) {
+      let row_data = data[index];
+      if (!row_data.Date)
+        continue;
+      let start = makeDate(row_data.Date+' '+row_data.Start);
+      row_data.StartDateObject = start;
+      let end = makeDate(row_data.Date+' '+row_data.End);
+      row_data.EndDateObject = end;
+      let day = dayAndDate( start );
+      if (days[day]) {
+        days[day].events.push( row_data );
+      } else {
+        start.setHours(0); start.setMinutes(0); start.setSeconds(0); start.setMilliseconds(0);
+        let avatar = getAvatar( start );
+        days[day] = {
+          date: start,
+          title: day,
+          avatar: avatar,
+          events: [row_data]
+        };
+      }
     }
+  } catch (error) {
+    return (
+      <SimpleCard text={ error.message } color="error" title="Error" icon={<Icon>error</Icon>} />
+    );
   }
   return (
     <div>
