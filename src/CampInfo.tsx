@@ -1,8 +1,5 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import SimpleCard from './SimpleCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Icon from '@material-ui/core/Icon';
 import SectionInformation from './SectionInformation';
@@ -18,14 +15,14 @@ export default function CampInfo( props ) {
 
   if (!isLoaded) {
     return (
-      <CampSimpleCard
+      <SimpleCard
         icon={<CircularProgress />}
         title={t('loading')}
       />
     )
   } else if (!sectionData || !sectionConfig) {
     return (
-      <CampSimpleCard
+      <SimpleCard
         icon={<Icon>error</Icon>}
         title={t('campinfo.error_title')}
         text={t('campinfo.error_message')}
@@ -61,27 +58,11 @@ export default function CampInfo( props ) {
         )
       default:
         return (
-          <CampSimpleCard
+          <SimpleCard
             icon={<Icon>error</Icon>}
             title={t('campinfo.unknown_section')+': '+config.Type}
           />
         );
     }
   }
-}
-
-function CampSimpleCard( props ) {
-  return (
-    <Card classes={{ root: 'CampCard' }} >
-      <CardHeader
-        avatar={props.icon}
-        title={props.title}
-      />
-      <CardContent>
-        <Typography variant="body1">
-          {props.text}
-        </Typography>
-      </CardContent>
-    </Card>
-  )
 }

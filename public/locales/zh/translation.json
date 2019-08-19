@@ -3,9 +3,11 @@
   "language": "語言",
   "loading": "載入中",
   "campselect": {
+    "home": "首页",
     "title": "選擇營地",
     "text": "從菜單中選擇營地名称",
-    "loading": "從服務器中獲取營地列表"
+    "loading": "從服務器中獲取營地列表",
+    "nocamps": "沒有找到營"
   },
   "campinfo": {
     "error_title": "無法獲取營地信息",

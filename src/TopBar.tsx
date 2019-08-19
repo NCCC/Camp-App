@@ -58,6 +58,53 @@ export default function TopBar( props ) {
     i18n.changeLanguage( lng );
   }
   
+  function CampList() {
+    if (error) {
+      return (<List>
+                <ListItem>
+                  <ListItemText>
+                    { error }
+                  </ListItemText>
+                </ListItem>
+              </List>);
+    }
+    if (campList.length > 0) {
+      return (<List
+        onClick={toggleDrawer}
+      >
+        <ListSubheader>
+          {t('campselect.title')}:
+        </ListSubheader>
+        { isLoaded
+          ? campList.map((item) => {
+            // Had to cast item to "any" for it to not crash with error TS2339
+            let camp: any = item;
+            return (
+            <ListItem button
+              key={camp.name}
+              selected={campID === camp.id}
+              component={Link}
+              to={'/'+camp.id}
+            >
+              <ListItemIcon><Icon>business</Icon></ListItemIcon>
+              <ListItemText primary={camp.name} />
+            </ListItem>
+          )})
+          : <ListItem>
+              <ListItemIcon><CircularProgress /></ListItemIcon>
+              <ListItemText>{t('campselect.loading')}...</ListItemText>
+            </ListItem>
+        }
+      </List>);
+    } else {
+      return (<List>
+                <ListItem>
+                  <ListItemText>{ t('campselect.nocamps') }</ListItemText>
+                </ListItem>
+              </List>);
+    }
+  }
+  
   return (
     <AppBar position="static">
       <Toolbar>
@@ -92,10 +139,6 @@ export default function TopBar( props ) {
               >中文</Button>
             </ListItemSecondaryAction>
           </ListItem>
-        </List>
-        <List
-          onClick={toggleDrawer}
-        >
           <ListItem button
             key="0"
             selected={campID === null}
@@ -103,32 +146,10 @@ export default function TopBar( props ) {
             to={'/'}
           >
             <ListItemIcon><Icon>home</Icon></ListItemIcon>
-            <ListItemText primary="Home" />
+            <ListItemText primary={t('campselect.home')} />
           </ListItem>
-          <ListSubheader>
-            {t('campselect.title')}:
-          </ListSubheader>
-          { isLoaded
-            ? campList.map((item) => {
-              // Had to cast item to "any" for it to not crash with error TS2339
-              let camp: any = item;
-              return (
-              <ListItem button
-                key={camp.name}
-                selected={campID === camp.id}
-                component={Link}
-                to={'/'+camp.id}
-              >
-                <ListItemIcon><Icon>business</Icon></ListItemIcon>
-                <ListItemText primary={camp.name} />
-              </ListItem>
-            )})
-            : <ListItem>
-                <ListItemIcon><CircularProgress /></ListItemIcon>
-                <ListItemText>{t('campselect.loading')}...</ListItemText>
-              </ListItem>
-          }
         </List>
+        <CampList />
       </SwipeableDrawer>
     </AppBar>
   )
