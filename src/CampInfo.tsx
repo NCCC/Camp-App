@@ -17,7 +17,9 @@ export default function CampInfo( props ) {
     return (
       <SimpleCard
         icon={<CircularProgress />}
-        title={t('loading')}
+        title={t('loading')+'...'}
+        text="For where two or three gather in my name, there am I with them. - Matthew 18:20"
+        color="textSecondary"
       />
     )
   } else if (!sectionData || !sectionConfig) {
