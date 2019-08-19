@@ -20,7 +20,7 @@ export default function App() {
 
   let redirect = '';
   let pathname = localStorage.getItem('pathname');
-  if (pathname && pathname != '/') {
+  if (pathname && pathname !== '/') {
     console.log('Camp App: First load and pathname is set, setting redirect variable to: ',pathname);
     redirect = pathname;
   } else {
