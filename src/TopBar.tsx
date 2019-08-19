@@ -150,6 +150,9 @@ export default function TopBar( props ) {
           </ListItem>
         </List>
         <CampList />
+        <List>
+          <ListSubheader>NCCC Camp App v{props.version}</ListSubheader>
+        </List>
       </SwipeableDrawer>
     </AppBar>
   )

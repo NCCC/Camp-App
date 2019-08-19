@@ -8,6 +8,8 @@ import CampInfo from './CampInfo';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './scss/App.scss';
 
+export const CAMP_APP_VERSION = '0.3.0';
+
 export default function App() {
   console.log('Camp App: Rendering App...');
     
@@ -130,6 +132,7 @@ export default function App() {
                         campID=""
                         campName=""
                         sectionName=""
+                        version={CAMP_APP_VERSION}
                       />
                     </div>
                     <CampSelect />
