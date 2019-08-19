@@ -79,7 +79,6 @@ export default function SectionSchedule( props ) {
       if (days[day]) {
         days[day].events.push( row_data );
       } else {
-        start.setHours(0); start.setMinutes(0); start.setSeconds(0); start.setMilliseconds(0);
         let avatar = getAvatar( start );
         days[day] = {
           date: start,
